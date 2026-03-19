@@ -1,9 +1,16 @@
+import localFont from 'next/font/local';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { routing } from '@/i18n/routing';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
+
+const geistSans = localFont({
+  src: '../fonts/GeistVF.woff',
+  variable: '--font-geist-sans',
+  display: 'swap',
+});
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://easysauda.kz';
 
@@ -92,8 +99,8 @@ export default async function LocaleLayout({ children, params }) {
   const messages = await getMessages();
 
   return (
-    <html lang={locale === 'kz' ? 'kk' : locale}>
-      <body>
+    <html lang={locale === 'kz' ? 'kk' : locale} className={geistSans.variable}>
+      <body className={geistSans.className}>
         <NextIntlClientProvider messages={messages}>
           <Header />
           <main className="min-h-screen pt-16">
