@@ -3,7 +3,27 @@
 import { create } from 'zustand';
 import api from '@/lib/api';
 
-const useAuthStore = create((set, get) => ({
+function setTokenCookie(name, value) {
+  document.cookie = `${name}=${value}; path=/; max-age=${7 * 24 * 60 * 60}; SameSite=Lax`;
+}
+
+function removeTokenCookie(name) {
+  document.cookie = `${name}=; path=/; max-age=0`;
+}
+
+function saveTokens(accessToken, refreshToken) {
+  localStorage.setItem('accessToken', accessToken);
+  localStorage.setItem('refreshToken', refreshToken);
+  setTokenCookie('accessToken', accessToken);
+}
+
+function clearTokens() {
+  localStorage.removeItem('accessToken');
+  localStorage.removeItem('refreshToken');
+  removeTokenCookie('accessToken');
+}
+
+const useAuthStore = create((set) => ({
   user: null,
   isLoading: true,
   isAuthenticated: false,
@@ -12,23 +32,20 @@ const useAuthStore = create((set, get) => ({
 
   login: async (email, password) => {
     const { data } = await api.post('/auth/login', { email, password });
-    localStorage.setItem('accessToken', data.accessToken);
-    localStorage.setItem('refreshToken', data.refreshToken);
+    saveTokens(data.accessToken, data.refreshToken);
     set({ user: data.user, isAuthenticated: true });
     return data.user;
   },
 
   register: async (name, email, password, language) => {
     const { data } = await api.post('/auth/register', { name, email, password, language });
-    localStorage.setItem('accessToken', data.accessToken);
-    localStorage.setItem('refreshToken', data.refreshToken);
+    saveTokens(data.accessToken, data.refreshToken);
     set({ user: data.user, isAuthenticated: true });
     return data.user;
   },
 
   logout: () => {
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('refreshToken');
+    clearTokens();
     set({ user: null, isAuthenticated: false });
   },
 
@@ -42,6 +59,7 @@ const useAuthStore = create((set, get) => ({
       const { data } = await api.get('/auth/me');
       set({ user: data.user, isAuthenticated: true, isLoading: false });
     } catch {
+      clearTokens();
       set({ user: null, isAuthenticated: false, isLoading: false });
     }
   },
