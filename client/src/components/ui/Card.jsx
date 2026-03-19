@@ -1,12 +1,38 @@
-export default function Card({ children, className = '', hover = false, ...props }) {
+'use client';
+
+import { motion } from 'framer-motion';
+
+export default function Card({
+  children,
+  className = '',
+  hover = false,
+  float = false,
+  as = 'div',
+  ...props
+}) {
+  const Comp = hover || float ? motion[as] || motion.div : as;
+
+  const motionProps = hover || float
+    ? {
+        whileHover: {
+          y: float ? -4 : -2,
+          boxShadow: '0 12px 48px rgba(0,0,0,0.10), 0 1px 0 rgba(255,255,255,1) inset',
+        },
+        transition: { type: 'spring', stiffness: 300, damping: 24 },
+      }
+    : {};
+
   return (
-    <div
-      className={`bg-dark-card border border-dark-border rounded-xl p-6
-        ${hover ? 'hover:border-accent-green/30 hover:shadow-lg hover:shadow-accent-green/5 transition-all duration-300' : ''}
-        ${className}`}
+    <Comp
+      className={`
+        glass-card rounded-[20px] p-6
+        ${hover ? 'cursor-pointer' : ''}
+        ${className}
+      `}
+      {...motionProps}
       {...props}
     >
       {children}
-    </div>
+    </Comp>
   );
 }
