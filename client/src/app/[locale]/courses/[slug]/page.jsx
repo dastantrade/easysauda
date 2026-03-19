@@ -8,6 +8,7 @@ import Card from '@/components/ui/Card';
 import Badge from '@/components/ui/Badge';
 import Button from '@/components/ui/Button';
 import { formatPrice, getLocalizedField, formatDuration } from '@/lib/utils';
+import { CourseJsonLd } from '@/components/seo/JsonLd';
 import api from '@/lib/api';
 
 export default function CourseDetailPage() {
@@ -48,6 +49,7 @@ export default function CourseDetailPage() {
 
   return (
     <div className="py-12">
+      <CourseJsonLd course={course} />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Main Content */}

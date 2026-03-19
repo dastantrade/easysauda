@@ -1,0 +1,13 @@
+<svg width="1200" height="630" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="630" fill="#0D1117"/>
+  <rect x="0" y="0" width="1200" height="4" fill="#00C853"/>
+  <!-- Logo -->
+  <rect x="520" y="180" width="60" height="60" rx="12" fill="#00C853"/>
+  <text x="550" y="222" font-family="Arial, sans-serif" font-size="28" font-weight="bold" fill="#0D1117" text-anchor="middle">ES</text>
+  <!-- Title -->
+  <text x="600" y="310" font-family="Arial, sans-serif" font-size="56" font-weight="bold" fill="#E6EDF3" text-anchor="middle">EasySauda</text>
+  <!-- Subtitle -->
+  <text x="600" y="370" font-family="Arial, sans-serif" font-size="24" fill="#8B949E" text-anchor="middle">Платформа обучения трейдингу</text>
+  <!-- Chart decoration -->
+  <polyline points="100,520 200,500 300,510 400,480 500,490 600,450 700,460 800,420 900,430 1000,390 1100,400" fill="none" stroke="#00C853" stroke-width="2" opacity="0.3"/>
+</svg>
