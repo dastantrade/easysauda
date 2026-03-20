@@ -13,7 +13,7 @@ export default function Header() {
   const locale = useLocale();
   const pathname = usePathname();
   const router = useRouter();
-  const { user, isAuthenticated, logout } = useAuthStore();
+  const { isAuthenticated, logout } = useAuthStore();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const switchLocale = () => {
@@ -27,22 +27,13 @@ export default function Header() {
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50">
-      {/* Glass bar */}
-      <div
-        className="
-          mx-auto mt-3 max-w-6xl px-3
-          sm:px-4
-        "
-      >
+    <header className="fixed top-8 left-0 right-0 z-40">
+      <div className="mx-auto mt-2 max-w-6xl px-3 sm:px-4">
         <motion.div
           initial={{ opacity: 0, y: -8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-          className="
-            glass-strong rounded-[18px] px-4
-            shadow-[0_4px_32px_rgba(0,0,0,0.08),0_1px_0_rgba(255,255,255,1)_inset]
-          "
+          className="glass-strong rounded-[18px] px-4 shadow-[0_4px_32px_rgba(0,0,0,0.60)]"
         >
           <div className="flex items-center justify-between h-14">
             {/* Logo */}
@@ -51,15 +42,11 @@ export default function Header() {
                 whileHover={{ scale: 1.08, rotate: 3 }}
                 whileTap={{ scale: 0.95 }}
                 transition={{ type: 'spring', stiffness: 400, damping: 20 }}
-                className="
-                  w-8 h-8 rounded-[10px] flex items-center justify-center
-                  bg-gradient-to-b from-[#34C759] to-[#25A244]
-                  shadow-[0_2px_8px_rgba(48,209,88,0.40),0_1px_0_rgba(255,255,255,0.30)_inset]
-                "
+                className="w-8 h-8 rounded-[10px] flex items-center justify-center bg-gradient-to-br from-[#00D4AA] to-[#00A882] shadow-[0_2px_12px_rgba(0,212,170,0.45)]"
               >
-                <span className="text-white font-bold text-[13px] tracking-tight">ES</span>
+                <span className="text-[#08090E] font-bold text-[13px] tracking-tight">ES</span>
               </motion.div>
-              <span className="text-ink font-semibold text-[17px] tracking-tight">
+              <span className="text-white font-semibold text-[17px] tracking-tight">
                 EasySauda
               </span>
             </Link>
@@ -75,13 +62,7 @@ export default function Header() {
                 whileTap={{ scale: 0.96 }}
                 transition={{ type: 'spring', stiffness: 400, damping: 25 }}
                 onClick={switchLocale}
-                className="
-                  ml-1 px-3 py-1.5 text-xs font-semibold rounded-[8px]
-                  bg-white/60 border border-glass-stroke
-                  text-ink-tertiary hover:text-ink
-                  transition-colors duration-150
-                  shadow-[0_1px_3px_rgba(0,0,0,0.06),0_1px_0_rgba(255,255,255,0.9)_inset]
-                "
+                className="ml-1 px-3 py-1.5 text-xs font-semibold rounded-[8px] bg-white/5 border border-white/10 text-white/50 hover:text-white/80 transition-colors duration-150"
               >
                 {locale === 'ru' ? 'KZ' : 'RU'}
               </motion.button>
@@ -94,7 +75,7 @@ export default function Header() {
                     </Link>
                     <button
                       onClick={handleLogout}
-                      className="text-sm text-ink-muted hover:text-accent-red transition-colors duration-150 px-2 py-1"
+                      className="text-sm text-white/40 hover:text-accent-red transition-colors duration-150 px-2 py-1"
                     >
                       {t('logout')}
                     </button>
@@ -116,11 +97,7 @@ export default function Header() {
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.92 }}
-              className="
-                md:hidden w-9 h-9 flex items-center justify-center rounded-[10px]
-                bg-white/60 border border-glass-stroke text-ink
-                shadow-[0_1px_3px_rgba(0,0,0,0.06)]
-              "
+              className="md:hidden w-9 h-9 flex items-center justify-center rounded-[10px] bg-white/5 border border-white/10 text-white"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -160,10 +137,7 @@ export default function Header() {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -8, scale: 0.98 }}
               transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-              className="
-                mt-2 glass-strong rounded-[18px] p-4
-                shadow-[0_8px_40px_rgba(0,0,0,0.10),0_1px_0_rgba(255,255,255,1)_inset]
-              "
+              className="mt-2 glass-strong rounded-[18px] p-4 shadow-[0_8px_40px_rgba(0,0,0,0.60)]"
             >
               <div className="flex flex-col gap-1">
                 <MobileNavLink href="/" onClick={() => setMobileMenuOpen(false)}>
@@ -173,11 +147,11 @@ export default function Header() {
                   {t('courses')}
                 </MobileNavLink>
 
-                <div className="border-t border-glass-stroke my-2" />
+                <div className="border-t border-white/[0.07] my-2" />
 
                 <button
                   onClick={switchLocale}
-                  className="text-left px-3 py-2.5 rounded-[10px] text-ink-tertiary hover:text-ink hover:bg-white/50 transition-all duration-150 text-[15px]"
+                  className="text-left px-3 py-2.5 rounded-[10px] text-white/45 hover:text-white hover:bg-white/5 transition-all duration-150 text-[15px]"
                 >
                   {locale === 'ru' ? 'Қазақша' : 'Русский'}
                 </button>
@@ -217,11 +191,7 @@ function NavLink({ href, children }) {
   return (
     <Link
       href={href}
-      className="
-        px-3 py-2 rounded-[10px] text-[15px] text-ink-secondary
-        hover:text-ink hover:bg-white/50
-        transition-all duration-150
-      "
+      className="px-3 py-2 rounded-[10px] text-[15px] text-white/60 hover:text-white hover:bg-white/5 transition-all duration-150"
     >
       {children}
     </Link>
@@ -233,11 +203,7 @@ function MobileNavLink({ href, children, onClick }) {
     <Link
       href={href}
       onClick={onClick}
-      className="
-        px-3 py-2.5 rounded-[10px] text-[15px] text-ink-secondary
-        hover:text-ink hover:bg-white/50
-        transition-all duration-150
-      "
+      className="px-3 py-2.5 rounded-[10px] text-[15px] text-white/60 hover:text-white hover:bg-white/5 transition-all duration-150"
     >
       {children}
     </Link>

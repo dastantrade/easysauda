@@ -16,7 +16,8 @@ export default function Card({
     ? {
         whileHover: {
           y: float ? -4 : -2,
-          boxShadow: '0 12px 48px rgba(0,0,0,0.10), 0 1px 0 rgba(255,255,255,1) inset',
+          borderColor: 'rgba(0,212,170,0.20)',
+          boxShadow: '0 12px 48px rgba(0,0,0,0.50), 0 0 0 1px rgba(0,212,170,0.15)',
         },
         transition: { type: 'spring', stiffness: 300, damping: 24 },
       }

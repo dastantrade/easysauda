@@ -1,6 +1,7 @@
 import { getTranslations } from 'next-intl/server';
 import Hero from '@/components/landing/Hero';
 import About from '@/components/landing/About';
+import Roadmap from '@/components/landing/Roadmap';
 import CourseCards from '@/components/landing/CourseCards';
 import Testimonials from '@/components/landing/Testimonials';
 import FAQ from '@/components/landing/FAQ';
@@ -26,6 +27,7 @@ export default async function HomePage({ params }) {
       <FAQJsonLdWrapper items={faqItems} />
       <Hero />
       <About />
+      <Roadmap />
       <CourseCards />
       <Testimonials />
       <FAQ />

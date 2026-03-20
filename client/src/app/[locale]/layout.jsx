@@ -5,6 +5,8 @@ import { notFound } from 'next/navigation';
 import { routing } from '@/i18n/routing';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
+import TickerTape from '@/components/ui/TickerTape';
+import CursorGlow from '@/components/ui/CursorGlow';
 
 const geistSans = localFont({
   src: '../fonts/GeistVF.woff',
@@ -20,7 +22,6 @@ export function generateStaticParams() {
 
 export async function generateMetadata({ params }) {
   const { locale } = await params;
-  const altLocale = locale === 'ru' ? 'kz' : 'ru';
 
   return {
     metadataBase: new URL(BASE_URL),
@@ -52,14 +53,7 @@ export async function generateMetadata({ params }) {
       siteName: 'EasySauda',
       locale: locale === 'kz' ? 'kk_KZ' : 'ru_RU',
       url: `${BASE_URL}/${locale}`,
-      images: [
-        {
-          url: `${BASE_URL}/og-image.png`,
-          width: 1200,
-          height: 630,
-          alt: 'EasySauda — Trading Education Platform',
-        },
-      ],
+      images: [{ url: `${BASE_URL}/og-image.png`, width: 1200, height: 630, alt: 'EasySauda' }],
     },
     twitter: {
       card: 'summary_large_image',
@@ -74,17 +68,7 @@ export async function generateMetadata({ params }) {
     robots: {
       index: true,
       follow: true,
-      googleBot: {
-        index: true,
-        follow: true,
-        'max-video-preview': -1,
-        'max-image-preview': 'large',
-        'max-snippet': -1,
-      },
-    },
-    verification: {
-      // google: 'your-google-verification-code',
-      // yandex: 'your-yandex-verification-code',
+      googleBot: { index: true, follow: true, 'max-video-preview': -1, 'max-image-preview': 'large', 'max-snippet': -1 },
     },
   };
 }
@@ -102,8 +86,14 @@ export default async function LocaleLayout({ children, params }) {
     <html lang={locale === 'kz' ? 'kk' : locale} className={geistSans.variable}>
       <body className={geistSans.className}>
         <NextIntlClientProvider messages={messages}>
+          {/* Cursor glow — follows mouse on desktop */}
+          <CursorGlow />
+          {/* Ticker tape — fixed top strip */}
+          <TickerTape />
+          {/* Header — offset below ticker */}
           <Header />
-          <main className="min-h-screen pt-16">
+          {/* Main — offset below ticker (h-8) + header (h-14 + mt-3) */}
+          <main className="min-h-screen pt-28">
             {children}
           </main>
           <Footer />

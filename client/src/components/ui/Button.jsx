@@ -3,64 +3,72 @@
 import { motion } from 'framer-motion';
 
 const variants = {
-  // Primary — skeuomorphic green gradient with shadow
+  // Primary — teal gradient
   primary: {
     base: `
-      bg-gradient-to-b from-[#34C759] to-[#2DB34A]
-      hover:from-[#3FD668] hover:to-[#30D158]
-      text-white font-semibold
-      shadow-[0_1px_3px_rgba(0,0,0,0.18),0_1px_0_rgba(255,255,255,0.25)_inset,0_-1px_0_rgba(0,0,0,0.12)_inset]
-      hover:shadow-[0_4px_20px_rgba(48,209,88,0.35),0_1px_0_rgba(255,255,255,0.25)_inset]
-      active:shadow-[0_0_1px_rgba(0,0,0,0.1),0_1px_3px_rgba(0,0,0,0.12)_inset]
-      active:from-[#2DB34A] active:to-[#25A244]
-      border border-[#25A244]/40
+      bg-gradient-to-br from-[#00D4AA] to-[#00A882]
+      hover:from-[#00E0B5] hover:to-[#00B890]
+      text-[#08090E] font-semibold
+      shadow-[0_4px_20px_rgba(0,212,170,0.30)]
+      hover:shadow-[0_6px_30px_rgba(0,212,170,0.45)]
+      active:shadow-[0_2px_10px_rgba(0,212,170,0.20)]
+      border border-[#00D4AA]/20
     `,
     scale: { hover: 1.02, tap: 0.97 },
   },
-  // Blue — Apple system blue
+  // Blue
   blue: {
     base: `
-      bg-gradient-to-b from-[#1A8BFF] to-[#007AFF]
-      hover:from-[#2E96FF] hover:to-[#1A8BFF]
-      text-white font-semibold
-      shadow-[0_1px_3px_rgba(0,0,0,0.18),0_1px_0_rgba(255,255,255,0.20)_inset,0_-1px_0_rgba(0,0,0,0.12)_inset]
-      hover:shadow-[0_4px_20px_rgba(0,122,255,0.30),0_1px_0_rgba(255,255,255,0.20)_inset]
-      active:shadow-[0_0_1px_rgba(0,0,0,0.1),0_1px_3px_rgba(0,0,0,0.12)_inset]
-      border border-[#0062CC]/30
+      bg-gradient-to-br from-[#00B8FF] to-[#0099DD]
+      hover:from-[#22C5FF] hover:to-[#00B8FF]
+      text-[#08090E] font-semibold
+      shadow-[0_4px_20px_rgba(0,184,255,0.25)]
+      hover:shadow-[0_6px_28px_rgba(0,184,255,0.40)]
+      border border-[#00B8FF]/20
     `,
     scale: { hover: 1.02, tap: 0.97 },
   },
-  // Secondary — glass with subtle stroke
+  // Secondary — dark glass
   secondary: {
     base: `
-      glass-strong
-      text-ink font-medium
-      hover:bg-white/90
-      hover:shadow-glass-hover
-      border-glass-stroke
+      bg-white/5
+      hover:bg-white/10
+      text-white font-medium
+      border border-white/10
+      hover:border-white/20
     `,
     scale: { hover: 1.01, tap: 0.98 },
   },
-  // Danger — red gradient
+  // Glass — premium glassmorphism (for "watch free lesson" etc.)
+  glass: {
+    base: `
+      glass-button
+      hover:bg-white/8
+      text-white/80 hover:text-white font-medium
+      hover:border-white/20
+      hover:shadow-[0_4px_20px_rgba(0,0,0,0.30)]
+    `,
+    scale: { hover: 1.01, tap: 0.98 },
+  },
+  // Danger
   danger: {
     base: `
-      bg-gradient-to-b from-[#FF4D40] to-[#FF3B30]
+      bg-gradient-to-br from-[#FF4D40] to-[#FF3B30]
       hover:from-[#FF6059] hover:to-[#FF4D40]
       text-white font-semibold
-      shadow-[0_1px_3px_rgba(0,0,0,0.18),0_1px_0_rgba(255,255,255,0.20)_inset]
-      hover:shadow-[0_4px_20px_rgba(255,59,48,0.30)]
-      active:shadow-[0_0_1px_rgba(0,0,0,0.1),0_1px_3px_rgba(0,0,0,0.12)_inset]
-      border border-[#D93025]/30
+      shadow-[0_4px_20px_rgba(255,59,48,0.25)]
+      hover:shadow-[0_6px_28px_rgba(255,59,48,0.35)]
+      border border-[#FF3B30]/20
     `,
     scale: { hover: 1.02, tap: 0.97 },
   },
-  // Ghost — minimal, no background
+  // Ghost
   ghost: {
     base: `
       bg-transparent
-      hover:bg-white/50
-      text-ink-tertiary hover:text-ink
-      border border-transparent hover:border-glass-stroke
+      hover:bg-white/5
+      text-white/60 hover:text-white
+      border border-transparent hover:border-white/10
     `,
     scale: { hover: 1.01, tap: 0.99 },
   },
