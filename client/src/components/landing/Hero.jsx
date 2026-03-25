@@ -37,6 +37,25 @@ function IconCourses() {
   );
 }
 
+// ── Static Shooting Stars ───────────────────────────────────────
+function ShootingStars() {
+  return (
+    <>
+      {/* Left — 2 stars */}
+      <div className="absolute pointer-events-none" style={{ top: '14%', left: '7%', width: 100, height: 1.5, rotate: '-45deg' }}>
+        <div style={{ width: '100%', height: '100%', background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.75) 55%, rgba(0,212,170,0.50) 100%)', borderRadius: 99, boxShadow: '0 0 6px rgba(0,212,170,0.30)' }} />
+      </div>
+      <div className="absolute pointer-events-none" style={{ top: '26%', left: '4%', width: 70, height: 1.5, rotate: '-45deg' }}>
+        <div style={{ width: '100%', height: '100%', background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.50) 55%, rgba(0,212,170,0.35) 100%)', borderRadius: 99, boxShadow: '0 0 4px rgba(0,212,170,0.20)' }} />
+      </div>
+      {/* Right — 1 star */}
+      <div className="absolute pointer-events-none" style={{ top: '18%', right: '6%', width: 85, height: 1.5, rotate: '-45deg' }}>
+        <div style={{ width: '100%', height: '100%', background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.65) 55%, rgba(0,212,170,0.45) 100%)', borderRadius: 99, boxShadow: '0 0 5px rgba(0,212,170,0.25)' }} />
+      </div>
+    </>
+  );
+}
+
 const WORDS = {
   ru: ['торговать', 'читать рынок', 'управлять рисками', 'зарабатывать'],
   kz: ['сауда жасауды', 'нарықты оқуды', 'тәуекелді басқаруды', 'табыс табуды'],
@@ -69,22 +88,8 @@ export default function Hero() {
         <CandlestickChart />
       </div>
 
-      {/* ── Diagonal decoration lines ── */}
-      <div className="absolute top-0 left-0 w-64 h-64 pointer-events-none opacity-[0.12]">
-        <svg viewBox="0 0 256 256" fill="none" className="w-full h-full">
-          <line x1="0" y1="60"  x2="60"  y2="0"  stroke="white" strokeWidth="0.8"/>
-          <line x1="0" y1="110" x2="110" y2="0"  stroke="white" strokeWidth="0.6"/>
-          <line x1="0" y1="160" x2="160" y2="0"  stroke="white" strokeWidth="0.5"/>
-          <line x1="0" y1="210" x2="210" y2="0"  stroke="white" strokeWidth="0.4"/>
-        </svg>
-      </div>
-      <div className="absolute top-0 right-0 w-48 h-48 pointer-events-none opacity-[0.09]">
-        <svg viewBox="0 0 192 192" fill="none" className="w-full h-full">
-          <line x1="192" y1="50"  x2="142" y2="0" stroke="white" strokeWidth="0.8"/>
-          <line x1="192" y1="100" x2="92"  y2="0" stroke="white" strokeWidth="0.6"/>
-          <line x1="192" y1="150" x2="42"  y2="0" stroke="white" strokeWidth="0.5"/>
-        </svg>
-      </div>
+      {/* ── Shooting Stars ── */}
+      <ShootingStars />
 
       {/* ── Soft teal glow behind heading ── */}
       <div
@@ -106,14 +111,46 @@ export default function Hero() {
         transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut' }}
       />
 
-      {/* ── Planet glow (horizon) ── */}
-      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[900px] h-[500px] pointer-events-none">
-        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[900px] h-[400px] rounded-[50%]"
-          style={{ background: 'radial-gradient(ellipse 80% 60% at 50% 100%, rgba(0,212,170,0.11) 0%, transparent 70%)' }} />
-        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[500px] h-[250px] rounded-[50%]"
-          style={{ background: 'radial-gradient(ellipse 70% 60% at 50% 100%, rgba(0,212,170,0.17) 0%, transparent 70%)' }} />
-        <div className="absolute bottom-[-20px] left-1/2 -translate-x-1/2 w-[200px] h-[100px] rounded-[50%]"
-          style={{ background: 'radial-gradient(ellipse 60% 60% at 50% 100%, rgba(0,212,170,0.26) 0%, transparent 70%)' }} />
+      {/* ── Planet / Earth horizon (RevGuard style) ── */}
+      <div className="absolute bottom-0 left-0 right-0 pointer-events-none overflow-hidden" style={{ height: '55%' }}>
+        {/* Outer atmosphere glow — wide, very soft */}
+        <div className="absolute bottom-0 left-1/2 -translate-x-1/2"
+          style={{
+            width: '140%', height: '100%',
+            background: 'radial-gradient(ellipse 85% 55% at 50% 100%, rgba(0,212,170,0.09) 0%, transparent 65%)',
+          }} />
+        {/* Mid atmosphere — tighter, more visible */}
+        <div className="absolute bottom-0 left-1/2 -translate-x-1/2"
+          style={{
+            width: '110%', height: '80%',
+            background: 'radial-gradient(ellipse 70% 55% at 50% 100%, rgba(0,212,170,0.16) 0%, transparent 60%)',
+          }} />
+        {/* Inner bright arc */}
+        <div className="absolute bottom-0 left-1/2 -translate-x-1/2"
+          style={{
+            width: '80%', height: '60%',
+            background: 'radial-gradient(ellipse 65% 55% at 50% 100%, rgba(0,212,170,0.28) 0%, rgba(0,212,170,0.06) 50%, transparent 70%)',
+          }} />
+        {/* Horizon line — bright rim */}
+        <div className="absolute bottom-0 left-1/2 -translate-x-1/2"
+          style={{
+            width: '85%', height: '38%',
+            background: 'radial-gradient(ellipse 75% 40% at 50% 100%, rgba(0,212,170,0.45) 0%, rgba(0,180,150,0.12) 40%, transparent 65%)',
+          }} />
+        {/* Focal light spot — the bright center on the horizon */}
+        <div className="absolute bottom-0 left-1/2 -translate-x-1/2"
+          style={{
+            width: '30%', height: '25%',
+            background: 'radial-gradient(ellipse 60% 70% at 50% 100%, rgba(120,255,220,0.55) 0%, rgba(0,212,170,0.25) 45%, transparent 70%)',
+            filter: 'blur(2px)',
+          }} />
+        {/* Sharp horizon edge line */}
+        <div className="absolute bottom-0 left-1/2 -translate-x-1/2"
+          style={{
+            width: '75%', height: 2,
+            background: 'linear-gradient(90deg, transparent 0%, rgba(0,212,170,0.35) 25%, rgba(120,255,220,0.70) 50%, rgba(0,212,170,0.35) 75%, transparent 100%)',
+            filter: 'blur(1px)',
+          }} />
       </div>
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
@@ -205,36 +242,6 @@ export default function Hero() {
             </Link>
           </motion.div>
 
-          {/* ── Premium Stats ── */}
-          <motion.div
-            className="grid grid-cols-3 gap-4 sm:gap-8 max-w-xl mx-auto"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.7 }}
-          >
-            {[
-              { value: '$50 000', label: 'Стартовый фандинг', Icon: IconFundingMin },
-              { value: '$150 000', label: 'Максимальный счёт', Icon: IconFundingMax },
-              { value: '7+',   label: 'Лет торгового опыта', Icon: IconExperience },
-            ].map((stat, i) => (
-              <motion.div
-                key={i}
-                className="flex flex-col items-center gap-2 p-4 rounded-2xl border border-white/[0.06] bg-white/[0.025] backdrop-blur-sm"
-                initial={{ opacity: 0, scale: 0.85 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.5, delay: 0.8 + i * 0.08 }}
-                whileHover={{
-                  borderColor: 'rgba(0,212,170,0.22)',
-                  boxShadow: '0 0 24px rgba(0,212,170,0.10)',
-                  y: -2,
-                }}
-              >
-                <div className="text-accent-green/65"><stat.Icon /></div>
-                <div className="text-2xl sm:text-3xl font-bold text-accent-green tabular-nums">{stat.value}</div>
-                <div className="text-xs text-white/38 text-center leading-tight">{stat.label}</div>
-              </motion.div>
-            ))}
-          </motion.div>
         </div>
       </div>
     </section>
