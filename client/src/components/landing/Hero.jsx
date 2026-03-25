@@ -42,14 +42,14 @@ function ShootingStars() {
   return (
     <>
       {/* Left — 2 stars */}
-      <div className="absolute pointer-events-none" style={{ top: '14%', left: '7%', width: 100, height: 1.5, rotate: '-45deg' }}>
+      <div className="absolute pointer-events-none" style={{ top: '4%', left: '7%', width: 100, height: 1.5, rotate: '-45deg' }}>
         <div style={{ width: '100%', height: '100%', background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.75) 55%, rgba(0,212,170,0.50) 100%)', borderRadius: 99, boxShadow: '0 0 6px rgba(0,212,170,0.30)' }} />
       </div>
-      <div className="absolute pointer-events-none" style={{ top: '26%', left: '4%', width: 70, height: 1.5, rotate: '-45deg' }}>
+      <div className="absolute pointer-events-none" style={{ top: '10%', left: '4%', width: 70, height: 1.5, rotate: '-45deg' }}>
         <div style={{ width: '100%', height: '100%', background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.50) 55%, rgba(0,212,170,0.35) 100%)', borderRadius: 99, boxShadow: '0 0 4px rgba(0,212,170,0.20)' }} />
       </div>
       {/* Right — 1 star */}
-      <div className="absolute pointer-events-none" style={{ top: '18%', right: '6%', width: 85, height: 1.5, rotate: '-45deg' }}>
+      <div className="absolute pointer-events-none" style={{ top: '6%', right: '6%', width: 85, height: 1.5, rotate: '-45deg' }}>
         <div style={{ width: '100%', height: '100%', background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.65) 55%, rgba(0,212,170,0.45) 100%)', borderRadius: 99, boxShadow: '0 0 5px rgba(0,212,170,0.25)' }} />
       </div>
     </>
@@ -111,46 +111,81 @@ export default function Hero() {
         transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut' }}
       />
 
-      {/* ── Planet / Earth horizon (RevGuard style) ── */}
-      <div className="absolute bottom-0 left-0 right-0 pointer-events-none overflow-hidden" style={{ height: '55%' }}>
-        {/* Outer atmosphere glow — wide, very soft */}
+      {/* ── Planet / Earth horizon — Dark Space/Fintech style ── */}
+      <div className="absolute bottom-0 left-0 right-0 pointer-events-none overflow-hidden" style={{ height: '52%' }}>
+
+        {/* Layer 1 — wide outer atmosphere, fades to dark */}
+        <div className="absolute inset-0"
+          style={{ background: 'radial-gradient(ellipse 100% 60% at 50% 100%, rgba(0,212,170,0.08) 0%, transparent 70%)' }}
+        />
+
+        {/* Layer 2 — mid glow, sunrise feel */}
+        <div className="absolute inset-0"
+          style={{ background: 'radial-gradient(ellipse 80% 70% at 50% 110%, rgba(0,212,170,0.18) 0%, rgba(0,180,140,0.06) 45%, transparent 65%)' }}
+        />
+
+        {/* Layer 3 — bright focal cone above horizon */}
         <div className="absolute bottom-0 left-1/2 -translate-x-1/2"
           style={{
-            width: '140%', height: '100%',
-            background: 'radial-gradient(ellipse 85% 55% at 50% 100%, rgba(0,212,170,0.09) 0%, transparent 65%)',
-          }} />
-        {/* Mid atmosphere — tighter, more visible */}
-        <div className="absolute bottom-0 left-1/2 -translate-x-1/2"
+            width: '50%', height: '90%',
+            background: 'radial-gradient(ellipse 55% 80% at 50% 100%, rgba(0,230,180,0.32) 0%, rgba(0,212,170,0.10) 40%, transparent 65%)',
+            filter: 'blur(4px)',
+          }}
+        />
+
+        {/* Layer 4 — the planet disk itself (large circle, only top arc visible) */}
+        <motion.div
+          className="absolute left-1/2 -translate-x-1/2"
           style={{
-            width: '110%', height: '80%',
-            background: 'radial-gradient(ellipse 70% 55% at 50% 100%, rgba(0,212,170,0.16) 0%, transparent 60%)',
-          }} />
-        {/* Inner bright arc */}
-        <div className="absolute bottom-0 left-1/2 -translate-x-1/2"
-          style={{
-            width: '80%', height: '60%',
-            background: 'radial-gradient(ellipse 65% 55% at 50% 100%, rgba(0,212,170,0.28) 0%, rgba(0,212,170,0.06) 50%, transparent 70%)',
-          }} />
-        {/* Horizon line — bright rim */}
-        <div className="absolute bottom-0 left-1/2 -translate-x-1/2"
-          style={{
-            width: '85%', height: '38%',
-            background: 'radial-gradient(ellipse 75% 40% at 50% 100%, rgba(0,212,170,0.45) 0%, rgba(0,180,150,0.12) 40%, transparent 65%)',
-          }} />
-        {/* Focal light spot — the bright center on the horizon */}
-        <div className="absolute bottom-0 left-1/2 -translate-x-1/2"
-          style={{
-            width: '30%', height: '25%',
-            background: 'radial-gradient(ellipse 60% 70% at 50% 100%, rgba(120,255,220,0.55) 0%, rgba(0,212,170,0.25) 45%, transparent 70%)',
-            filter: 'blur(2px)',
-          }} />
-        {/* Sharp horizon edge line */}
-        <div className="absolute bottom-0 left-1/2 -translate-x-1/2"
-          style={{
-            width: '75%', height: 2,
-            background: 'linear-gradient(90deg, transparent 0%, rgba(0,212,170,0.35) 25%, rgba(120,255,220,0.70) 50%, rgba(0,212,170,0.35) 75%, transparent 100%)',
-            filter: 'blur(1px)',
-          }} />
+            bottom: '-72%',
+            width: '130%',
+            paddingBottom: '130%', /* 1:1 aspect ratio = circle */
+            borderRadius: '50%',
+            background: 'radial-gradient(ellipse 60% 40% at 50% 20%, rgba(0,30,22,0.60) 0%, rgba(3,6,5,0.92) 70%)',
+            border: '1px solid rgba(0,212,170,0.22)',
+          }}
+          animate={{
+            boxShadow: [
+              '0 0 35px 6px rgba(0,212,170,0.22), 0 0 90px 20px rgba(0,212,170,0.07), 0 -15px 50px 8px rgba(0,212,170,0.12)',
+              '0 0 65px 14px rgba(0,212,170,0.42), 0 0 160px 45px rgba(0,212,170,0.13), 0 -30px 90px 18px rgba(0,230,180,0.20)',
+              '0 0 35px 6px rgba(0,212,170,0.22), 0 0 90px 20px rgba(0,212,170,0.07), 0 -15px 50px 8px rgba(0,212,170,0.12)',
+            ],
+            borderColor: [
+              'rgba(0,212,170,0.22)',
+              'rgba(0,212,170,0.45)',
+              'rgba(0,212,170,0.22)',
+            ],
+          }}
+          transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut' }}
+        />
+
+        {/* Layer 5 — SVG arc on top for crisp curved line + glow */}
+        <svg
+          className="absolute bottom-0 left-0 w-full"
+          style={{ height: 90 }}
+          viewBox="0 0 1200 90"
+          preserveAspectRatio="none"
+        >
+          <defs>
+            <linearGradient id="arcGrad2" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%"   stopColor="rgba(0,212,170,0)" />
+              <stop offset="20%"  stopColor="rgba(0,212,170,0.40)" />
+              <stop offset="50%"  stopColor="rgba(140,255,220,0.90)" />
+              <stop offset="80%"  stopColor="rgba(0,212,170,0.40)" />
+              <stop offset="100%" stopColor="rgba(0,212,170,0)" />
+            </linearGradient>
+            <filter id="arcGlow">
+              <feGaussianBlur stdDeviation="2" result="blur" />
+              <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+          </defs>
+          {/* Wide soft glow halo */}
+          <path d="M -50 90 Q 600 -10 1250 90" fill="none" stroke="url(#arcGrad2)" strokeWidth="12" opacity="0.18" />
+          {/* Medium glow */}
+          <path d="M -50 90 Q 600 -10 1250 90" fill="none" stroke="url(#arcGrad2)" strokeWidth="5" opacity="0.35" />
+          {/* Sharp crisp line */}
+          <path d="M -50 90 Q 600 -10 1250 90" fill="none" stroke="url(#arcGrad2)" strokeWidth="1.5" opacity="1" filter="url(#arcGlow)" />
+        </svg>
       </div>
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
