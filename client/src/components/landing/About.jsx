@@ -35,13 +35,13 @@ function useCountUp(target, suffix = '', duration = 1600) {
   return [display, ref];
 }
 
-function OdometerStat({ value, rawNum, suf, label }) {
-  const [count, ref] = useCountUp(rawNum, suf, 1600);
+function OdometerStat({ value, rawNum, suf, label, prefix }) {
+  const [count, ref] = useCountUp(rawNum ?? '0', suf, 1600);
 
   return (
     <div ref={ref} className="text-center p-4">
       <div className="text-2xl sm:text-3xl font-bold text-accent-green tabular-nums font-mono">
-        {count}
+        {rawNum === null ? value : (prefix ? `${prefix}${count}` : count)}
       </div>
       <div className="text-xs text-white/45 mt-1">{label}</div>
     </div>
@@ -56,16 +56,15 @@ export default function About() {
   const photoInView = useInView(photoRef, { once: true, margin: '-60px' });
 
   const stats = [
-    { value: '7+',   rawNum: '7',   suf: '+', label: t('experience') },
-    { value: '500+', rawNum: '500', suf: '+', label: t('students') },
-    { value: '78%',  rawNum: '78',  suf: '%', label: t('winRate') },
+    { value: '2+',   rawNum: '2',   suf: '+', label: 'лет опыта' },
+    { value: 'MNQ',  rawNum: null,  suf: '',  label: 'мой инструмент' },
+    { value: '$200', rawNum: '200', suf: '',  label: 'тейк в день', prefix: '$' },
   ];
 
   const bullets = [
-    'Действующий трейдер — торгую каждый день',
-    'Реальная статистика — всё прозрачно',
-    'Фокус на управление рисками',
-    'Индивидуальный подход к каждому',
+    'В рекламе — заявки и продажи для бизнеса',
+    'В рынке — контроль риска и стабильный результат',
+    'Показываю реальные сделки, не симуляции',
   ];
 
   return (
@@ -140,26 +139,6 @@ export default function About() {
               ))}
             </div>
 
-            {/* Bullets */}
-            <div className="space-y-3">
-              {bullets.map((item, i) => (
-                <motion.div
-                  key={i}
-                  className="flex items-start gap-3 text-white/50"
-                  initial={{ opacity: 0, x: 16 }}
-                  animate={contentInView ? { opacity: 1, x: 0 } : {}}
-                  transition={{ delay: 0.4 + i * 0.08, duration: 0.45 }}
-                >
-                  {/* Animated checkmark */}
-                  <div className="flex-shrink-0 mt-0.5 w-5 h-5 rounded-full bg-accent-green/10 border border-accent-green/25 flex items-center justify-center">
-                    <svg className="w-3 h-3 text-accent-green" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2.5}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-                    </svg>
-                  </div>
-                  <span className="text-sm leading-relaxed">{item}</span>
-                </motion.div>
-              ))}
-            </div>
           </motion.div>
         </div>
       </div>

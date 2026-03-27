@@ -111,80 +111,25 @@ export default function Hero() {
         transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut' }}
       />
 
-      {/* ── Planet / Earth horizon — Dark Space/Fintech style ── */}
-      <div className="absolute bottom-0 left-0 right-0 pointer-events-none overflow-hidden" style={{ height: '52%' }}>
+      {/* ── Smooth bottom fade — blends Hero into next section ── */}
+      <div
+        className="absolute bottom-0 left-0 right-0 pointer-events-none"
+        style={{ height: 200, background: 'linear-gradient(to bottom, transparent 0%, #08090E 100%)' }}
+      />
 
-        {/* Layer 1 — wide outer atmosphere, fades to dark */}
-        <div className="absolute inset-0"
-          style={{ background: 'radial-gradient(ellipse 100% 60% at 50% 100%, rgba(0,212,170,0.08) 0%, transparent 70%)' }}
-        />
-
-        {/* Layer 2 — mid glow, sunrise feel */}
-        <div className="absolute inset-0"
-          style={{ background: 'radial-gradient(ellipse 80% 70% at 50% 110%, rgba(0,212,170,0.18) 0%, rgba(0,180,140,0.06) 45%, transparent 65%)' }}
-        />
-
-        {/* Layer 3 — bright focal cone above horizon */}
-        <div className="absolute bottom-0 left-1/2 -translate-x-1/2"
-          style={{
-            width: '50%', height: '90%',
-            background: 'radial-gradient(ellipse 55% 80% at 50% 100%, rgba(0,230,180,0.32) 0%, rgba(0,212,170,0.10) 40%, transparent 65%)',
-            filter: 'blur(4px)',
-          }}
-        />
-
-        {/* Layer 4 — the planet disk itself (large circle, only top arc visible) */}
-        <motion.div
-          className="absolute left-1/2 -translate-x-1/2"
-          style={{
-            bottom: '-72%',
-            width: '130%',
-            paddingBottom: '130%', /* 1:1 aspect ratio = circle */
-            borderRadius: '50%',
-            background: 'radial-gradient(ellipse 60% 40% at 50% 20%, rgba(0,30,22,0.60) 0%, rgba(3,6,5,0.92) 70%)',
-            border: '1px solid rgba(0,212,170,0.22)',
-          }}
-          animate={{
-            boxShadow: [
-              '0 0 35px 6px rgba(0,212,170,0.22), 0 0 90px 20px rgba(0,212,170,0.07), 0 -15px 50px 8px rgba(0,212,170,0.12)',
-              '0 0 65px 14px rgba(0,212,170,0.42), 0 0 160px 45px rgba(0,212,170,0.13), 0 -30px 90px 18px rgba(0,230,180,0.20)',
-              '0 0 35px 6px rgba(0,212,170,0.22), 0 0 90px 20px rgba(0,212,170,0.07), 0 -15px 50px 8px rgba(0,212,170,0.12)',
-            ],
-            borderColor: [
-              'rgba(0,212,170,0.22)',
-              'rgba(0,212,170,0.45)',
-              'rgba(0,212,170,0.22)',
-            ],
-          }}
-          transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut' }}
-        />
-
-        {/* Layer 5 — SVG arc on top for crisp curved line + glow */}
-        <svg
-          className="absolute bottom-0 left-0 w-full"
-          style={{ height: 90 }}
-          viewBox="0 0 1200 90"
-          preserveAspectRatio="none"
-        >
+      {/* ── Horizon arc — sits above fade ── */}
+      <div className="absolute bottom-0 left-0 right-0 pointer-events-none" style={{ height: 90 }}>
+        <svg className="absolute bottom-0 left-0 w-full h-full" viewBox="0 0 1200 90" preserveAspectRatio="none">
           <defs>
             <linearGradient id="arcGrad2" x1="0%" y1="0%" x2="100%" y2="0%">
               <stop offset="0%"   stopColor="rgba(0,212,170,0)" />
-              <stop offset="20%"  stopColor="rgba(0,212,170,0.40)" />
-              <stop offset="50%"  stopColor="rgba(140,255,220,0.90)" />
-              <stop offset="80%"  stopColor="rgba(0,212,170,0.40)" />
+              <stop offset="20%"  stopColor="rgba(0,212,170,0.30)" />
+              <stop offset="50%"  stopColor="rgba(140,255,220,0.65)" />
+              <stop offset="80%"  stopColor="rgba(0,212,170,0.30)" />
               <stop offset="100%" stopColor="rgba(0,212,170,0)" />
             </linearGradient>
-            <filter id="arcGlow">
-              <feGaussianBlur stdDeviation="2" result="blur" />
-              <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-            </filter>
           </defs>
-          {/* Wide soft glow halo */}
-          <path d="M -50 90 Q 600 -10 1250 90" fill="none" stroke="url(#arcGrad2)" strokeWidth="12" opacity="0.18" />
-          {/* Medium glow */}
-          <path d="M -50 90 Q 600 -10 1250 90" fill="none" stroke="url(#arcGrad2)" strokeWidth="5" opacity="0.35" />
-          {/* Sharp crisp line */}
-          <path d="M -50 90 Q 600 -10 1250 90" fill="none" stroke="url(#arcGrad2)" strokeWidth="1.5" opacity="1" filter="url(#arcGlow)" />
+          <path d="M -50 90 Q 600 -10 1250 90" fill="none" stroke="url(#arcGrad2)" strokeWidth="1.2" opacity="0.85" />
         </svg>
       </div>
 

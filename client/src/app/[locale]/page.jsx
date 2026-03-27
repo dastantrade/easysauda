@@ -3,6 +3,8 @@ import Hero from '@/components/landing/Hero';
 import About from '@/components/landing/About';
 import Roadmap from '@/components/landing/Roadmap';
 import CourseCards from '@/components/landing/CourseCards';
+import CourseProcess from '@/components/landing/CourseProcess';
+import CourseProgram from '@/components/landing/CourseProgram';
 import Testimonials from '@/components/landing/Testimonials';
 import FAQ from '@/components/landing/FAQ';
 import CTA from '@/components/landing/CTA';
@@ -26,8 +28,10 @@ export default async function HomePage({ params }) {
       <WebsiteJsonLd />
       <FAQJsonLdWrapper items={faqItems} />
       <Hero />
-      <About />
       <Roadmap />
+      <About />
+      <CourseProcess />
+      <CourseProgram />
       <CourseCards />
       <Testimonials />
       <FAQ />
