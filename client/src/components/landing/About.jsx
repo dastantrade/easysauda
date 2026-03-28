@@ -375,20 +375,20 @@ export default function About() {
               {t('subtitle')}
             </p>
 
-            {/* Odometer stats */}
-            <div className="grid grid-cols-3 gap-3 mb-8">
+            {/* Stats — 3 columns with dividers */}
+            <div className="flex items-stretch mb-8">
               {stats.map((stat, i) => (
                 <motion.div
                   key={i}
-                  className="rounded-xl border border-white/[0.07] bg-white/[0.025] backdrop-blur-sm overflow-hidden"
+                  className="flex-1 text-center py-4"
+                  style={{
+                    borderLeft: i !== 0 ? '1px solid rgba(255,255,255,0.08)' : 'none',
+                    paddingLeft: i !== 0 ? '1.5rem' : 0,
+                    paddingRight: i !== stats.length - 1 ? '1.5rem' : 0,
+                  }}
                   initial={{ opacity: 0, y: 16 }}
                   animate={contentInView ? { opacity: 1, y: 0 } : {}}
                   transition={{ delay: 0.2 + i * 0.1, duration: 0.5 }}
-                  whileHover={{
-                    borderColor: 'rgba(0,212,170,0.20)',
-                    boxShadow: '0 0 20px rgba(0,212,170,0.08)',
-                    y: -2,
-                  }}
                 >
                   <OdometerStat {...stat} />
                 </motion.div>
