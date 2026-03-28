@@ -5,7 +5,6 @@ import Roadmap from '@/components/landing/Roadmap';
 import CourseCards from '@/components/landing/CourseCards';
 import CourseProcess from '@/components/landing/CourseProcess';
 import CourseProgram from '@/components/landing/CourseProgram';
-import Testimonials from '@/components/landing/Testimonials';
 import FAQ from '@/components/landing/FAQ';
 import CTA from '@/components/landing/CTA';
 import { OrganizationJsonLd, WebsiteJsonLd } from '@/components/seo/JsonLd';
@@ -33,7 +32,6 @@ export default async function HomePage({ params }) {
       <CourseProcess />
       <CourseProgram />
       <CourseCards />
-      <Testimonials />
       <FAQ />
       <CTA />
     </>
