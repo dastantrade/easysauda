@@ -307,14 +307,43 @@ export default function About() {
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
 
-          {/* ── Left: Stacking photo gallery ── */}
+          {/* ── Left: Photo placeholder ── */}
           <motion.div
             initial={{ opacity: 0, x: -40 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, margin: '-60px' }}
             transition={{ duration: 0.7, ease: 'easeOut' }}
+            className="flex justify-center lg:justify-start"
           >
-            <StackingGallery />
+            <div
+              className="relative w-full max-w-sm aspect-[4/5] rounded-3xl overflow-hidden"
+              style={{
+                background: 'rgba(255,255,255,0.02)',
+                border: '1.5px dashed rgba(0,212,170,0.20)',
+                boxShadow: '0 0 40px rgba(0,212,170,0.04)',
+              }}
+            >
+              {/* Corner accent */}
+              <div className="absolute top-0 right-0 w-32 h-32 pointer-events-none"
+                style={{ background: 'radial-gradient(circle at top right, rgba(0,212,170,0.08), transparent 70%)' }} />
+              <div className="absolute bottom-0 left-0 w-32 h-32 pointer-events-none"
+                style={{ background: 'radial-gradient(circle at bottom left, rgba(0,100,200,0.06), transparent 70%)' }} />
+
+              {/* Center icon */}
+              <div className="absolute inset-0 flex flex-col items-center justify-center gap-3">
+                <div
+                  className="w-16 h-16 rounded-2xl flex items-center justify-center"
+                  style={{ background: 'rgba(0,212,170,0.07)', border: '1px solid rgba(0,212,170,0.15)' }}
+                >
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="rgba(0,212,170,0.5)" strokeWidth="1.4">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/>
+                  </svg>
+                </div>
+                <span className="text-[11px] font-mono tracking-widest uppercase text-white/20">
+                  Фото скоро
+                </span>
+              </div>
+            </div>
           </motion.div>
 
           {/* ── Right: Content ── */}
