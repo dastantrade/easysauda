@@ -117,21 +117,6 @@ export default function Hero() {
         style={{ height: 200, background: 'linear-gradient(to bottom, transparent 0%, #08090E 100%)' }}
       />
 
-      {/* ── Horizon arc — sits above fade ── */}
-      <div className="absolute bottom-0 left-0 right-0 pointer-events-none" style={{ height: 90 }}>
-        <svg className="absolute bottom-0 left-0 w-full h-full" viewBox="0 0 1200 90" preserveAspectRatio="none">
-          <defs>
-            <linearGradient id="arcGrad2" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%"   stopColor="rgba(0,212,170,0)" />
-              <stop offset="20%"  stopColor="rgba(0,212,170,0.30)" />
-              <stop offset="50%"  stopColor="rgba(140,255,220,0.65)" />
-              <stop offset="80%"  stopColor="rgba(0,212,170,0.30)" />
-              <stop offset="100%" stopColor="rgba(0,212,170,0)" />
-            </linearGradient>
-          </defs>
-          <path d="M -50 90 Q 600 -10 1250 90" fill="none" stroke="url(#arcGrad2)" strokeWidth="1.2" opacity="0.85" />
-        </svg>
-      </div>
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
         <div className="text-center max-w-4xl mx-auto">

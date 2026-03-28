@@ -213,6 +213,81 @@ function StackingGallery() {
   );
 }
 
+/* ── Horizontal Photo Strip ──────────────────────────────────── */
+const stripPhotos = [
+  { src: '/about/desk.jpg',    alt: 'За рабочим местом',           rotate: -2.5, y: 10 },
+  { src: '/about/chart.jpg',   alt: 'Реальная сделка на графике',  rotate:  1.5, y: 0  },
+  { src: '/about/payouts.jpg', alt: 'Выплаты с проп-счёта',        rotate: -1.5, y: 6  },
+  { src: '/about/cert.jpg',    alt: 'Сертификат Topstep',          rotate:  2,   y: 3  },
+];
+
+function PhotoStrip() {
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true, margin: '-40px' });
+
+  return (
+    <div ref={ref} className="relative mt-14 -mx-4 sm:-mx-6 lg:-mx-8 overflow-hidden">
+      {/* Left fade */}
+      <div className="absolute left-0 top-0 bottom-0 w-24 z-10 pointer-events-none"
+        style={{ background: 'linear-gradient(to right, #08090E 0%, transparent 100%)' }} />
+      {/* Right fade */}
+      <div className="absolute right-0 top-0 bottom-0 w-24 z-10 pointer-events-none"
+        style={{ background: 'linear-gradient(to left, #08090E 0%, transparent 100%)' }} />
+
+      <div className="flex gap-4 justify-center px-6 pb-2" style={{ paddingTop: 12 }}>
+        {stripPhotos.map((photo, i) => (
+          <motion.div
+            key={photo.src}
+            initial={{ opacity: 0, y: 40 }}
+            animate={inView ? { opacity: 1, y: photo.y } : {}}
+            transition={{ delay: 0.08 * i, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+            whileHover={{ y: photo.y - 8, scale: 1.03, zIndex: 10 }}
+            style={{ rotate: `${photo.rotate}deg`, position: 'relative' }}
+          >
+            <div
+              className="relative overflow-hidden flex-shrink-0"
+              style={{
+                width: 'clamp(220px, 22vw, 340px)',
+                height: 'clamp(150px, 15vw, 230px)',
+                borderRadius: 20,
+                boxShadow: '0 16px 48px rgba(0,0,0,0.50), 0 0 0 1px rgba(255,255,255,0.06)',
+              }}
+            >
+              <img
+                src={photo.src}
+                alt={photo.alt}
+                draggable={false}
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                  userSelect: 'none',
+                  display: 'block',
+                }}
+                onError={(e) => {
+                  e.currentTarget.parentElement.style.background = 'rgba(255,255,255,0.04)';
+                  e.currentTarget.style.display = 'none';
+                }}
+              />
+              {/* Brand tint */}
+              <div className="absolute inset-0 pointer-events-none"
+                style={{
+                  background: 'linear-gradient(135deg, rgba(0,212,170,0.08) 0%, rgba(0,80,200,0.10) 100%)',
+                  mixBlendMode: 'color',
+                }}
+              />
+              {/* Vignette */}
+              <div className="absolute inset-0 pointer-events-none"
+                style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.40) 0%, transparent 55%)' }}
+              />
+            </div>
+          </motion.div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export default function About() {
   const t = useTranslations('about');
   const contentRef = useRef(null);
@@ -281,6 +356,10 @@ export default function About() {
 
           </motion.div>
         </div>
+
+        {/* ── Bottom: Horizontal photo strip ── */}
+        <PhotoStrip />
+
       </div>
     </section>
   );
