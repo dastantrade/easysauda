@@ -259,40 +259,33 @@ function BentoPhoto({ src, alt, label, delay, inView, className = '', style = {}
 
 function BentoGrid({ inView }) {
   return (
-    <div className="mt-14 w-full" style={{
-      display: 'grid',
-      gridTemplateColumns: '1fr 1.4fr',
-      gridTemplateRows: '220px 190px',
-      gap: 10,
-    }}>
-      {/* cert.jpg — left column, spans both rows (tall portrait) */}
-      <BentoPhoto
-        src="/about/cert.jpg"
-        alt="Сертификат Topstep Funded Trader"
-        label="Topstep Funded Trader"
-        delay={0.05}
-        inView={inView}
-        style={{ gridColumn: '1', gridRow: '1 / 3' }}
-      />
-      {/* payouts.jpg — top right */}
-      <BentoPhoto
-        src="/about/payouts.jpg"
-        alt="Выплаты с проп-счёта"
-        label="Реальные выплаты"
-        delay={0.12}
-        inView={inView}
-        style={{ gridColumn: '2', gridRow: '1' }}
-      />
-      {/* chart.jpg — bottom right, wide */}
-      <BentoPhoto
-        src="/about/chart.jpg"
-        alt="Реальная сделка на графике"
-        label="Живая торговля"
-        delay={0.18}
-        inView={inView}
-        style={{ gridColumn: '2', gridRow: '2' }}
-      />
-    </div>
+    <>
+      {/* Mobile: simple stack */}
+      <div className="mt-10 flex flex-col gap-3 sm:hidden">
+        {[
+          { src: '/about/payouts.jpg', alt: 'Выплаты с проп-счёта',            label: 'Реальные выплаты',      delay: 0.05, h: 180 },
+          { src: '/about/chart.jpg',   alt: 'Реальная сделка на графике',       label: 'Живая торговля',        delay: 0.12, h: 160 },
+          { src: '/about/cert.jpg',    alt: 'Сертификат Topstep Funded Trader', label: 'Topstep Funded Trader', delay: 0.18, h: 200 },
+        ].map(p => (
+          <BentoPhoto key={p.src} src={p.src} alt={p.alt} label={p.label} delay={p.delay} inView={inView}
+            style={{ height: p.h }} />
+        ))}
+      </div>
+
+      {/* sm+: asymmetric grid */}
+      <div className="mt-14 w-full hidden sm:grid" style={{
+        gridTemplateColumns: '1fr 1.4fr',
+        gridTemplateRows: '220px 190px',
+        gap: 10,
+      }}>
+        <BentoPhoto src="/about/cert.jpg" alt="Сертификат Topstep Funded Trader" label="Topstep Funded Trader"
+          delay={0.05} inView={inView} style={{ gridColumn: '1', gridRow: '1 / 3' }} />
+        <BentoPhoto src="/about/payouts.jpg" alt="Выплаты с проп-счёта" label="Реальные выплаты"
+          delay={0.12} inView={inView} style={{ gridColumn: '2', gridRow: '1' }} />
+        <BentoPhoto src="/about/chart.jpg" alt="Реальная сделка на графике" label="Живая торговля"
+          delay={0.18} inView={inView} style={{ gridColumn: '2', gridRow: '2' }} />
+      </div>
+    </>
   );
 }
 

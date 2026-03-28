@@ -77,16 +77,16 @@ export default function CourseProcess() {
           transition={{ duration: 0.5 }}
           className="mb-10"
         >
-          <p className="text-xs font-semibold tracking-[0.18em] uppercase text-white/40 mb-3">
+          <div className="inline-flex items-center px-3 py-1 rounded-full border border-accent-green/20 bg-accent-green/[0.06] text-accent-green text-[11px] font-mono tracking-widest uppercase mb-4">
             Формат обучения
-          </p>
+          </div>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white">
             Как проходит курс
           </h2>
         </motion.div>
 
         {/* 3 step cards */}
-        <div className="grid grid-cols-3 gap-4 lg:gap-6 mb-12">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 lg:gap-6 mb-12">
           {steps.map(({ num, Icon, value, label, highlight }, i) => (
             <motion.div
               key={i}
@@ -159,7 +159,7 @@ export default function CourseProcess() {
 
         {/* "For whom" — two columns */}
         <motion.div
-          className="grid grid-cols-2 gap-4 lg:gap-6"
+          className="grid grid-cols-1 sm:grid-cols-2 gap-4 lg:gap-6"
           initial={{ opacity: 0, y: 16 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ delay: 0.6, duration: 0.5 }}

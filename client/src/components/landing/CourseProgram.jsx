@@ -80,7 +80,7 @@ function ModuleCard({ mod, index, inView }) {
     >
       {/* Row */}
       <motion.div
-        className="flex items-center gap-6 px-6 py-5 rounded-xl"
+        className="flex items-center gap-3 sm:gap-6 px-3 sm:px-6 py-4 sm:py-5 rounded-xl"
         style={{
           background: open ? 'rgba(0,212,170,0.05)' : 'rgba(255,255,255,0.02)',
           borderLeft: open ? '2px solid rgba(0,212,170,0.8)' : '2px solid rgba(255,255,255,0.07)',
@@ -109,7 +109,7 @@ function ModuleCard({ mod, index, inView }) {
 
         {/* Title & result */}
         <div className="flex-1 min-w-0 flex items-center justify-between gap-6">
-          <span className="text-[17px] font-semibold text-white tracking-tight">{mod.title}</span>
+          <span className="text-[14px] sm:text-[17px] font-semibold text-white tracking-tight">{mod.title}</span>
           {!open && (
             <span className="hidden lg:block text-[13px] text-white/25 truncate max-w-[240px] font-normal">{mod.result}</span>
           )}
@@ -138,7 +138,7 @@ function ModuleCard({ mod, index, inView }) {
             transition={{ duration: 0.28, ease: [0.4, 0, 0.2, 1] }}
             className="overflow-hidden"
           >
-            <div className="pl-[100px] pr-6 pb-6 pt-2">
+            <div className="pl-4 sm:pl-[100px] pr-4 sm:pr-6 pb-6 pt-2">
               <ul className="space-y-2 mb-4">
                 {mod.points.map((p, i) => (
                   <motion.li
