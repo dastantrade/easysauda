@@ -3,86 +3,67 @@
 import { useState, useRef } from 'react';
 import { motion, AnimatePresence, useInView, useScroll, useTransform, useSpring } from 'framer-motion';
 
-/* ── Line-art icons per module ── */
-const IconMarket = () => (
-  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-    <rect x="3" y="11" width="2.5" height="6" rx="0.5" stroke="currentColor" strokeWidth="1.3"/>
-    <rect x="8.75" y="6" width="2.5" height="11" rx="0.5" stroke="currentColor" strokeWidth="1.3"/>
-    <rect x="14.5" y="3" width="2.5" height="14" rx="0.5" stroke="currentColor" strokeWidth="1.3"/>
-    <path d="M4.25 8l4.5-4 5.75 3.5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
-  </svg>
-);
-const IconLevels = () => (
-  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-    <path d="M2 6h16M2 14h16" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-    <circle cx="6"  cy="6"  r="1.5" fill="currentColor"/>
-    <circle cx="14" cy="14" r="1.5" fill="currentColor"/>
-    <path d="M6 6 L14 14" stroke="currentColor" strokeWidth="1" strokeDasharray="2 2" opacity="0.5"/>
-  </svg>
-);
-const IconTrend = () => (
-  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-    <path d="M2 16 L8 9 L12 12 L18 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-    <path d="M14 4h4v4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-    <path d="M2 16h16" stroke="currentColor" strokeWidth="1" opacity="0.3" strokeLinecap="round"/>
-  </svg>
-);
-const IconCandle = () => (
-  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-    <line x1="5" y1="2" x2="5" y2="5" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/>
-    <rect x="3" y="5" width="4" height="7" rx="0.5" stroke="currentColor" strokeWidth="1.3"/>
-    <line x1="5" y1="12" x2="5" y2="16" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/>
-    <line x1="13" y1="4" x2="13" y2="7" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/>
-    <rect x="11" y="7" width="4" height="6" rx="0.5" fill="currentColor" opacity="0.25" stroke="currentColor" strokeWidth="1.3"/>
-    <line x1="13" y1="13" x2="13" y2="17" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/>
-  </svg>
-);
-const IconStrategy = () => (
-  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-    <circle cx="10" cy="10" r="7.5" stroke="currentColor" strokeWidth="1.3"/>
-    <circle cx="10" cy="10" r="4"   stroke="currentColor" strokeWidth="1.3"/>
-    <circle cx="10" cy="10" r="1.5" fill="currentColor"/>
-    <path d="M10 2.5v2M10 15.5v2M2.5 10h2M15.5 10h2" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/>
-  </svg>
-);
-const IconScalp = () => (
-  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-    <path d="M11 2 L7 10h5l-3 8" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
-    <path d="M3 10h2M15 10h2M4.5 5l1.5 1.5M14 13.5l1.5 1.5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" opacity="0.5"/>
-  </svg>
-);
-const IconAccum = () => (
-  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-    <rect x="2" y="7" width="16" height="7" rx="1.5" stroke="currentColor" strokeWidth="1.3"/>
-    <path d="M6 7V5M10 7V4M14 7V5" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/>
-    <path d="M6 14v2M14 14v2" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/>
-    <path d="M5 10.5h10" stroke="currentColor" strokeWidth="1" strokeDasharray="2 1.5" strokeLinecap="round" opacity="0.5"/>
-  </svg>
-);
-const IconRisk = () => (
-  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-    <path d="M10 2 L17 5.5v5c0 4-3 6.5-7 7.5-4-1-7-3.5-7-7.5v-5z" stroke="currentColor" strokeWidth="1.3"/>
-    <path d="M7 10l2 2 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-  </svg>
-);
-const IconPractice = () => (
-  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-    <circle cx="10" cy="5.5" r="2.5" stroke="currentColor" strokeWidth="1.3"/>
-    <path d="M4 17c0-3.314 2.686-6 6-6s6 2.686 6 6" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/>
-    <path d="M13 8l1.5 1.5-3 3" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
-  </svg>
-);
+/* ── Icons ── */
+const IconMarket   = () => (<svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="3" y="11" width="2.5" height="6" rx="0.5" stroke="currentColor" strokeWidth="1.3"/><rect x="8.75" y="6" width="2.5" height="11" rx="0.5" stroke="currentColor" strokeWidth="1.3"/><rect x="14.5" y="3" width="2.5" height="14" rx="0.5" stroke="currentColor" strokeWidth="1.3"/><path d="M4.25 8l4.5-4 5.75 3.5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/></svg>);
+const IconTerminal = () => (<svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="2" y="3" width="16" height="14" rx="2" stroke="currentColor" strokeWidth="1.3"/><path d="M5 8l3 3-3 3" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/><path d="M10 14h5" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/></svg>);
+const IconLevels   = () => (<svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M2 6h16M2 14h16" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/><circle cx="6" cy="6" r="1.5" fill="currentColor"/><circle cx="14" cy="14" r="1.5" fill="currentColor"/><path d="M6 6 L14 14" stroke="currentColor" strokeWidth="1" strokeDasharray="2 2" opacity="0.5"/></svg>);
+const IconCandle   = () => (<svg width="20" height="20" viewBox="0 0 20 20" fill="none"><line x1="5" y1="2" x2="5" y2="5" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/><rect x="3" y="5" width="4" height="7" rx="0.5" stroke="currentColor" strokeWidth="1.3"/><line x1="5" y1="12" x2="5" y2="16" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/><line x1="13" y1="4" x2="13" y2="7" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/><rect x="11" y="7" width="4" height="6" rx="0.5" fill="currentColor" opacity="0.25" stroke="currentColor" strokeWidth="1.3"/><line x1="13" y1="13" x2="13" y2="17" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/></svg>);
+const IconTrend    = () => (<svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M2 16 L8 9 L12 12 L18 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/><path d="M14 4h4v4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/><path d="M2 16h16" stroke="currentColor" strokeWidth="1" opacity="0.3" strokeLinecap="round"/></svg>);
+const IconStrategy = () => (<svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="7.5" stroke="currentColor" strokeWidth="1.3"/><circle cx="10" cy="10" r="4" stroke="currentColor" strokeWidth="1.3"/><circle cx="10" cy="10" r="1.5" fill="currentColor"/><path d="M10 2.5v2M10 15.5v2M2.5 10h2M15.5 10h2" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/></svg>);
+const IconScalp    = () => (<svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M11 2 L7 10h5l-3 8" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/><path d="M3 10h2M15 10h2M4.5 5l1.5 1.5M14 13.5l1.5 1.5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" opacity="0.5"/></svg>);
+const IconRisk     = () => (<svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 2 L17 5.5v5c0 4-3 6.5-7 7.5-4-1-7-3.5-7-7.5v-5z" stroke="currentColor" strokeWidth="1.3"/><path d="M7 10l2 2 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>);
+const IconProp     = () => (<svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="2" y="6" width="16" height="11" rx="1.5" stroke="currentColor" strokeWidth="1.3"/><path d="M6 6V4.5a4 4 0 018 0V6" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/><circle cx="10" cy="11.5" r="2" stroke="currentColor" strokeWidth="1.3"/></svg>);
+const IconPsych    = () => (<svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 3c3.866 0 7 2.686 7 6 0 2.5-1.5 4.7-3.75 5.65V17H6.75v-2.35C4.5 13.7 3 11.5 3 9c0-3.314 3.134-6 7-6z" stroke="currentColor" strokeWidth="1.3"/><path d="M7.5 17h5" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/></svg>);
+const IconLive     = () => (<svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="3" fill="currentColor" opacity="0.6"/><circle cx="10" cy="10" r="6" stroke="currentColor" strokeWidth="1.2" opacity="0.4"/><circle cx="10" cy="10" r="8.5" stroke="currentColor" strokeWidth="1" opacity="0.2"/><path d="M10 1.5v2M10 16.5v2M1.5 10h2M16.5 10h2" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" opacity="0.5"/></svg>);
 
-const modules = [
-  { num: 1, Icon: IconMarket,   title: 'Основа рынка',        result: 'Понимаешь логику движения цены',       points: ['Как устроен рынок и за счёт чего движется цена', 'Участники: толпа и крупный капитал', 'Тренд, коррекция, боковик'] },
-  { num: 2, Icon: IconLevels,   title: 'Уровни',              result: 'Находишь ключевые зоны',               points: ['Поддержка и сопротивление', 'Как строить сильные уровни', 'Ложные пробои', 'Накопление и распределение'] },
-  { num: 3, Icon: IconTrend,    title: 'Тренды и структура',  result: 'Понимаешь направление рынка',          points: ['Определение тренда', 'Линии тренда', 'Слом структуры', 'Переход в боковик'] },
-  { num: 4, Icon: IconCandle,   title: 'Свечной анализ',      result: 'Точный вход, а не угадывание',         points: ['Чтение свечей (баланс покупателя/продавца)', 'Пин-бар, поглощение, inside bar', 'Фильтрация ложных сигналов', 'Подтверждение от уровней'] },
-  { num: 5, Icon: IconStrategy, title: 'Стратегия торговли',  result: 'Есть чёткая стратегия',                points: ['Готовая система входа (алгоритм действий)', 'Сценарии: отбой от уровня, пробой, ретест', 'Комбинация: уровень + тренд + свечной сигнал', 'Когда входить, а когда пропускать'] },
-  { num: 6, Icon: IconScalp,    title: 'Скальпинг',           result: 'Умеешь забирать короткие движения',    points: ['Что такое скальпинг и как на нём зарабатывают', 'Работа на младших таймфреймах', 'Быстрые входы и фиксация прибыли', 'Как "забирать движение частями"'] },
-  { num: 7, Icon: IconAccum,    title: 'Накопление',          result: 'Понимаешь, когда будет импульс',       points: ['Как формируется боковик', 'Где идёт набор позиции', 'Выход из диапазона', 'Работа внутри флэта'] },
-  { num: 8, Icon: IconRisk,     title: 'Риск-менеджмент',     result: 'Сохраняешь депозит',                   points: ['Постановка стопов', 'Работа с 1–2 контрактами', 'RR (риск/прибыль)', 'Контроль убытков'] },
-  { num: 9, Icon: IconPractice, title: 'Практика',            result: 'Переход к самостоятельной торговле',   points: ['Разбор рынка в реальном времени', 'Индивидуальный разбор сделок', 'Работа над ошибками', 'Формирование своей системы'], wide: true },
+/* ── 5 thematic blocks ── */
+const groups = [
+  {
+    id: 1,
+    label: 'Блок 1',
+    title: 'Фундамент и инструменты',
+    modules: [
+      { num: 1,  Icon: IconMarket,   title: 'Основа рынка',              result: 'Понимаешь логику движения цены',      points: ['Как устроен рынок и за счёт чего движется цена', 'Участники: толпа и крупный капитал', 'Тренд, коррекция, боковик', 'Почему большинство теряет деньги'] },
+      { num: 2,  Icon: IconTerminal, title: 'Работа в терминале',        result: 'Умеешь работать в торговой платформе', points: ['Интерфейс торговой платформы', 'Выставление ордеров: лимит, маркет, стоп', 'Работа с графиками и таймфреймами', 'Базовые настройки под MNQ/NQ'] },
+    ],
+  },
+  {
+    id: 2,
+    label: 'Блок 2',
+    title: 'Технический арсенал',
+    modules: [
+      { num: 3,  Icon: IconLevels,   title: 'Уровни и структура',        result: 'Находишь ключевые зоны на графике',   points: ['Поддержка и сопротивление', 'Как строить сильные уровни', 'Ложные пробои и их фильтрация', 'Накопление и распределение'] },
+      { num: 4,  Icon: IconCandle,   title: 'Свечной анализ',            result: 'Читаешь рынок через свечи',           points: ['Чтение свечей: баланс покупателя и продавца', 'Пин-бар, поглощение, inside bar', 'Фильтрация ложных сигналов', 'Подтверждение от уровня'] },
+      { num: 5,  Icon: IconTrend,    title: 'Тренды и фазы рынка',       result: 'Понимаешь направление и фазу рынка',  points: ['Определение тренда и его структура', 'Линии тренда и каналы', 'Слом структуры и переход в боковик', 'Фазы рынка: накопление, движение, распределение'] },
+    ],
+  },
+  {
+    id: 3,
+    label: 'Блок 3',
+    title: 'Торговые стратегии',
+    modules: [
+      { num: 6,  Icon: IconStrategy, title: 'Пошаговый алгоритм торговли', result: 'Есть система — знаешь когда входить', points: ['Готовая система входа: алгоритм действий', 'Сценарии: отбой, пробой, ретест', 'Комбинация: уровень + тренд + свеча', 'Когда входить, а когда пропускать'] },
+      { num: 7,  Icon: IconScalp,    title: 'Скальпинг и интрадей',       result: 'Забираешь движение внутри дня',       points: ['Что такое скальпинг и как на нём зарабатывают', 'Работа на младших таймфреймах (1m–5m)', 'Быстрые входы и частичная фиксация', 'Интрадей-структура на NQ/MNQ'] },
+    ],
+  },
+  {
+    id: 4,
+    label: 'Блок 4',
+    title: 'Математика трейдинга',
+    modules: [
+      { num: 8,  Icon: IconRisk,     title: 'Риск-менеджмент',           result: 'Сохраняешь депозит и контролируешь риск', points: ['Постановка стопов по структуре', 'Работа с 1–2 контрактами MNQ', 'RR (риск/прибыль): расчёт позиций', 'Дневной лимит убытков и правила проп'] },
+      { num: 9,  Icon: IconProp,     title: 'Как пройти проп-трейдинг',  result: 'Получаешь проп-счёт от $50 000',       points: ['Что такое проп-трейдинг и как он работает', 'Правила проп-компаний: цели, ограничения', 'Стратегия прохождения оценки', 'Как торговать чужим капиталом без риска своих денег'] },
+    ],
+  },
+  {
+    id: 5,
+    label: 'Блок 5',
+    title: 'Психология и практика',
+    modules: [
+      { num: 10, Icon: IconPsych,    title: 'Психология трейдинга',      result: 'Торгуешь по системе, не по эмоциям',  points: ['Почему трейдеры теряют на знаниях', 'Страх, жадность, месть рынку', 'Дисциплина как главный актив', 'Ведение торгового журнала'] },
+      { num: 11, Icon: IconLive,     title: 'Live-сессии',               result: 'Торгуешь вместе с ментором в реальном времени', points: ['Разбор рынка в реальном времени', 'Совместный анализ перед сессией', 'Индивидуальный разбор твоих сделок', 'Переход к самостоятельной торговле'] },
+    ],
+  },
 ];
 
 function ModuleCard({ mod, index, inView }) {
@@ -99,40 +80,46 @@ function ModuleCard({ mod, index, inView }) {
     >
       {/* Row */}
       <motion.div
-        className="flex items-center gap-5 px-5 py-4 rounded-xl transition-colors duration-200"
+        className="flex items-center gap-6 px-6 py-5 rounded-xl"
         style={{
           background: open ? 'rgba(0,212,170,0.05)' : 'rgba(255,255,255,0.02)',
-          borderLeft: open ? '2px solid rgba(0,212,170,0.7)' : '2px solid rgba(255,255,255,0.06)',
+          borderLeft: open ? '2px solid rgba(0,212,170,0.8)' : '2px solid rgba(255,255,255,0.07)',
         }}
         whileHover={{
-          background: 'rgba(255,255,255,0.035)',
-          borderLeftColor: 'rgba(0,212,170,0.4)',
+          background: 'rgba(255,255,255,0.04)',
+          borderLeftColor: 'rgba(0,212,170,0.5)',
         }}
       >
-        {/* Number */}
-        <span className="text-[13px] font-mono font-bold w-6 flex-shrink-0"
-          style={{ color: open ? 'rgba(0,212,170,0.9)' : 'rgba(255,255,255,0.2)' }}>
+        {/* Number — dominant */}
+        <span
+          className="font-mono font-black flex-shrink-0 w-10 text-right leading-none"
+          style={{
+            fontSize: '22px',
+            color: open ? 'rgba(0,212,170,1)' : 'rgba(255,255,255,0.18)',
+            letterSpacing: '-0.03em',
+          }}
+        >
           {String(mod.num).padStart(2, '0')}
         </span>
 
         {/* Icon */}
-        <div className="flex-shrink-0" style={{ color: open ? '#00D4AA' : 'rgba(255,255,255,0.35)' }}>
+        <div className="flex-shrink-0" style={{ color: open ? '#00D4AA' : 'rgba(255,255,255,0.30)' }}>
           <Icon />
         </div>
 
         {/* Title & result */}
-        <div className="flex-1 min-w-0 flex items-center justify-between gap-4">
-          <span className="text-[15px] font-semibold text-white">{mod.title}</span>
+        <div className="flex-1 min-w-0 flex items-center justify-between gap-6">
+          <span className="text-[17px] font-semibold text-white tracking-tight">{mod.title}</span>
           {!open && (
-            <span className="hidden sm:block text-[12px] text-white/30 truncate max-w-[220px]">{mod.result}</span>
+            <span className="hidden lg:block text-[13px] text-white/25 truncate max-w-[240px] font-normal">{mod.result}</span>
           )}
         </div>
 
         {/* Chevron */}
         <motion.svg
           className="flex-shrink-0"
-          style={{ color: open ? '#00D4AA' : 'rgba(255,255,255,0.25)' }}
-          width="16" height="16" viewBox="0 0 16 16" fill="none"
+          style={{ color: open ? '#00D4AA' : 'rgba(255,255,255,0.20)' }}
+          width="18" height="18" viewBox="0 0 16 16" fill="none"
           animate={{ rotate: open ? 180 : 0 }}
           transition={{ duration: 0.22 }}
         >
@@ -151,7 +138,7 @@ function ModuleCard({ mod, index, inView }) {
             transition={{ duration: 0.28, ease: [0.4, 0, 0.2, 1] }}
             className="overflow-hidden"
           >
-            <div className="pl-[76px] pr-5 pb-5 pt-2">
+            <div className="pl-[100px] pr-6 pb-6 pt-2">
               <ul className="space-y-2 mb-4">
                 {mod.points.map((p, i) => (
                   <motion.li
@@ -208,7 +195,9 @@ export default function CourseProgram() {
           transition={{ duration: 0.5 }}
           className="mb-8"
         >
-          <p className="text-xs font-semibold tracking-[0.18em] uppercase text-white/40 mb-3">9 модулей</p>
+          <div className="inline-flex items-center px-3 py-1 rounded-full border border-accent-green/20 bg-accent-green/[0.06] text-accent-green text-[11px] font-mono tracking-widest uppercase mb-4">
+            11 модулей · 5 блоков
+          </div>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6">Программа курса</h2>
 
           {/* Dynamic scroll-linked timeline */}
@@ -255,10 +244,10 @@ export default function CourseProgram() {
 
               {/* Main text */}
               <div>
-                <p className="text-xl font-bold text-white leading-snug mb-3">
+                <p className="text-2xl lg:text-3xl font-bold text-white leading-snug mb-4">
                   Ты не просто изучаешь трейдинг —
                 </p>
-                <p className="text-sm text-white/55 leading-relaxed">
+                <p className="text-base lg:text-lg text-white/60 leading-relaxed">
                   ты получаешь{' '}
                   <span className="text-accent-green font-semibold">конкретную модель</span>{' '}
                   и{' '}
@@ -266,19 +255,6 @@ export default function CourseProgram() {
                   на рынке.
                 </p>
               </div>
-
-              {/* Mini checklist */}
-              <ul className="space-y-2.5">
-                {['Своя торговая система', 'Контроль риска на каждой сделке', 'Проп-счёт сразу в работу'].map((item, i) => (
-                  <li key={i} className="flex items-center gap-2.5 text-sm text-white/60">
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" className="flex-shrink-0 text-accent-green">
-                      <circle cx="8" cy="8" r="7" stroke="currentColor" strokeWidth="1.2"/>
-                      <path d="M5 8l2 2 4-4" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
-                    {item}
-                  </li>
-                ))}
-              </ul>
 
               {/* CTA Button */}
               <motion.a
@@ -295,11 +271,34 @@ export default function CourseProgram() {
             </div>
           </motion.div>
 
-          {/* RIGHT — module accordion */}
+          {/* RIGHT — module accordion grouped by block */}
           <div className="flex-1 min-w-0">
-            <div className="grid grid-cols-1 gap-2.5">
-              {modules.map((mod, i) => (
-                <ModuleCard key={mod.num} mod={mod} index={i} inView={inView} />
+            <div className="flex flex-col gap-6">
+              {groups.map((group, gi) => (
+                <div key={group.id}>
+                  {/* Group header */}
+                  <motion.div
+                    className="flex items-center gap-3 mb-2 px-2"
+                    initial={{ opacity: 0, x: -8 }}
+                    animate={inView ? { opacity: 1, x: 0 } : {}}
+                    transition={{ delay: 0.08 * gi, duration: 0.4 }}
+                  >
+                    <span className="text-[10px] font-mono font-bold tracking-widest uppercase text-accent-green/60 whitespace-nowrap">
+                      {group.label}
+                    </span>
+                    <div className="flex-1 h-px bg-white/[0.06]" />
+                    <span className="text-[12px] font-semibold text-white/30 whitespace-nowrap">
+                      {group.title}
+                    </span>
+                  </motion.div>
+
+                  {/* Modules in this group */}
+                  <div className="flex flex-col gap-1.5">
+                    {group.modules.map((mod, i) => (
+                      <ModuleCard key={mod.num} mod={mod} index={gi * 3 + i} inView={inView} />
+                    ))}
+                  </div>
+                </div>
               ))}
             </div>
           </div>
