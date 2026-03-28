@@ -91,51 +91,56 @@ function ModuleCard({ mod, index, inView }) {
 
   return (
     <motion.div
-      className={`rounded-xl border border-white/[0.07] backdrop-blur-sm overflow-hidden cursor-pointer${mod.wide ? ' col-span-2' : ''}`}
-      style={{
-        background: open
-          ? 'rgba(0,212,170,0.04)'
-          : 'rgba(255,255,255,0.018)',
-        borderColor: open ? 'rgba(0,212,170,0.25)' : undefined,
-        boxShadow: open ? '0 0 28px rgba(0,212,170,0.07), inset 0 1px 0 rgba(0,212,170,0.08)' : undefined,
-      }}
-      initial={{ opacity: 0, y: 20 }}
+      className="relative cursor-pointer overflow-hidden"
+      initial={{ opacity: 0, y: 16 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ delay: 0.05 * index, duration: 0.45 }}
-      whileHover={!open ? {
-        borderColor: 'rgba(0,212,170,0.22)',
-        background: 'rgba(255,255,255,0.032)',
-        boxShadow: '0 0 20px rgba(0,212,170,0.06)',
-      } : {}}
+      transition={{ delay: 0.04 * index, duration: 0.4 }}
       onClick={() => setOpen(o => !o)}
     >
-      {/* Header */}
-      <div className="flex items-center gap-3 px-4 py-3.5">
-        <span className="text-[10px] font-mono font-bold text-white/20 w-5 flex-shrink-0">
+      {/* Row */}
+      <motion.div
+        className="flex items-center gap-5 px-5 py-4 rounded-xl transition-colors duration-200"
+        style={{
+          background: open ? 'rgba(0,212,170,0.05)' : 'rgba(255,255,255,0.02)',
+          borderLeft: open ? '2px solid rgba(0,212,170,0.7)' : '2px solid rgba(255,255,255,0.06)',
+        }}
+        whileHover={{
+          background: 'rgba(255,255,255,0.035)',
+          borderLeftColor: 'rgba(0,212,170,0.4)',
+        }}
+      >
+        {/* Number */}
+        <span className="text-[13px] font-mono font-bold w-6 flex-shrink-0"
+          style={{ color: open ? 'rgba(0,212,170,0.9)' : 'rgba(255,255,255,0.2)' }}>
           {String(mod.num).padStart(2, '0')}
         </span>
-        <div className={`flex-shrink-0 transition-opacity duration-200 ${open ? 'opacity-100' : 'opacity-60'}`}
-          style={{ color: '#00D4AA' }}>
+
+        {/* Icon */}
+        <div className="flex-shrink-0" style={{ color: open ? '#00D4AA' : 'rgba(255,255,255,0.35)' }}>
           <Icon />
         </div>
-        <div className="flex-1 min-w-0">
-          <div className="text-sm font-semibold text-white leading-tight">{mod.title}</div>
+
+        {/* Title & result */}
+        <div className="flex-1 min-w-0 flex items-center justify-between gap-4">
+          <span className="text-[15px] font-semibold text-white">{mod.title}</span>
           {!open && (
-            <div className="text-[11px] text-white/30 mt-0.5 truncate">{mod.result}</div>
+            <span className="hidden sm:block text-[12px] text-white/30 truncate max-w-[220px]">{mod.result}</span>
           )}
         </div>
+
+        {/* Chevron */}
         <motion.svg
           className="flex-shrink-0"
-          style={{ color: open ? '#00D4AA' : 'rgba(255,255,255,0.3)' }}
+          style={{ color: open ? '#00D4AA' : 'rgba(255,255,255,0.25)' }}
           width="16" height="16" viewBox="0 0 16 16" fill="none"
           animate={{ rotate: open ? 180 : 0 }}
-          transition={{ duration: 0.25 }}
+          transition={{ duration: 0.22 }}
         >
           <path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
         </motion.svg>
-      </div>
+      </motion.div>
 
-      {/* Expanded */}
+      {/* Expanded body */}
       <AnimatePresence initial={false}>
         {open && (
           <motion.div
@@ -143,26 +148,25 @@ function ModuleCard({ mod, index, inView }) {
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.32, ease: [0.4, 0, 0.2, 1] }}
+            transition={{ duration: 0.28, ease: [0.4, 0, 0.2, 1] }}
             className="overflow-hidden"
           >
-            <div className="px-4 pb-4">
-              <div className="border-t border-accent-green/[0.12] mb-3" />
+            <div className="pl-[76px] pr-5 pb-5 pt-2">
               <ul className="space-y-2 mb-4">
                 {mod.points.map((p, i) => (
                   <motion.li
                     key={i}
-                    initial={{ opacity: 0, x: -6 }}
+                    initial={{ opacity: 0, x: -8 }}
                     animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.06 * i, duration: 0.25 }}
-                    className="flex items-start gap-2.5 text-[12px] text-white/45 leading-relaxed"
+                    transition={{ delay: 0.05 * i, duration: 0.22 }}
+                    className="flex items-start gap-3 text-[13px] text-white/45 leading-relaxed"
                   >
-                    <span className="flex-shrink-0 mt-[5px] w-[5px] h-[1.5px] rounded-full bg-accent-green/50" />
+                    <span className="flex-shrink-0 mt-[7px] w-1 h-1 rounded-full bg-accent-green/50" />
                     {p}
                   </motion.li>
                 ))}
               </ul>
-              <div className="inline-flex items-center gap-1.5 bg-accent-green/[0.08] border border-accent-green/20 rounded-md px-3 py-1.5">
+              <div className="inline-flex items-center gap-1.5 bg-accent-green/[0.08] border border-accent-green/20 rounded-lg px-3 py-1.5">
                 <svg width="11" height="11" viewBox="0 0 12 12" fill="none" className="text-accent-green">
                   <path d="M2 6l3 3 5-5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
@@ -187,7 +191,7 @@ export default function CourseProgram() {
   const lineWidth = useTransform(fill, v => `${v * 100}%`);
 
   return (
-    <section ref={ref} className="relative py-20 px-4 overflow-hidden">
+    <section ref={ref} className="relative py-20 px-4">
 
       {/* Background glows */}
       <div className="absolute inset-0 pointer-events-none">
@@ -195,7 +199,7 @@ export default function CourseProgram() {
         <div style={{ background: 'radial-gradient(ellipse 50% 35% at 80% 70%, rgba(0,100,255,0.03) 0%, transparent 60%)' }} className="absolute inset-0"/>
       </div>
 
-      <div className="max-w-2xl mx-auto">
+      <div className="max-w-6xl mx-auto">
 
         {/* Header */}
         <motion.div
@@ -205,7 +209,7 @@ export default function CourseProgram() {
           className="mb-8"
         >
           <p className="text-xs font-semibold tracking-[0.18em] uppercase text-white/40 mb-3">9 модулей</p>
-          <h2 className="text-3xl sm:text-4xl font-bold text-white mb-6">Программа курса</h2>
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6">Программа курса</h2>
 
           {/* Dynamic scroll-linked timeline */}
           <div className="flex items-center gap-3">
@@ -228,44 +232,79 @@ export default function CourseProgram() {
           </div>
         </motion.div>
 
-        {/* Module grid */}
-        <div className="grid grid-cols-2 gap-2.5">
-          {modules.map((mod, i) => (
-            <ModuleCard key={mod.num} mod={mod} index={i} inView={inView} />
-          ))}
-        </div>
+        {/* Two-column layout: left CTA card + right accordion */}
+        <div className="flex flex-col lg:flex-row gap-6 lg:gap-8 lg:items-start">
 
-        {/* Final CTA card */}
-        <motion.div
-          className="mt-8 rounded-xl overflow-hidden border border-accent-green/20"
-          style={{ background: 'linear-gradient(135deg, rgba(0,212,170,0.06) 0%, rgba(0,0,0,0) 60%, rgba(0,50,180,0.04) 100%)' }}
-          initial={{ opacity: 0, y: 20 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ delay: 0.6, duration: 0.5 }}
-        >
-          <div className="px-6 py-6 flex flex-col sm:flex-row items-start sm:items-center gap-4">
-            <div className="flex-1">
-              <p className="text-base font-semibold text-white leading-relaxed mb-1">
-                Ты не просто изучаешь трейдинг —
-              </p>
-              <p className="text-sm text-white/50 leading-relaxed">
-                ты получаешь <span className="text-accent-green font-semibold">конкретную модель</span> и{' '}
-                <span className="text-accent-green font-semibold">чёткий алгоритм действий</span> на рынке.
-              </p>
+          {/* LEFT — sticky dark card */}
+          <motion.div
+            className="lg:sticky lg:top-32 w-full lg:w-[340px] flex-shrink-0 rounded-2xl overflow-hidden"
+            style={{
+              background: 'linear-gradient(160deg, rgba(0,212,170,0.10) 0%, rgba(10,12,18,0.95) 50%, rgba(0,40,160,0.08) 100%)',
+              border: '1px solid rgba(0,212,170,0.20)',
+              boxShadow: '0 0 40px rgba(0,212,170,0.06), inset 0 1px 0 rgba(0,212,170,0.12)',
+            }}
+            initial={{ opacity: 0, x: -20 }}
+            animate={inView ? { opacity: 1, x: 0 } : {}}
+            transition={{ delay: 0.2, duration: 0.5 }}
+          >
+            <div className="p-5 lg:p-7 flex flex-col gap-4 lg:gap-6">
+              {/* Label */}
+              <span className="text-[10px] font-bold tracking-[0.2em] uppercase text-accent-green/70">
+                Итог курса
+              </span>
+
+              {/* Main text */}
+              <div>
+                <p className="text-xl font-bold text-white leading-snug mb-3">
+                  Ты не просто изучаешь трейдинг —
+                </p>
+                <p className="text-sm text-white/55 leading-relaxed">
+                  ты получаешь{' '}
+                  <span className="text-accent-green font-semibold">конкретную модель</span>{' '}
+                  и{' '}
+                  <span className="text-accent-green font-semibold">чёткий алгоритм действий</span>{' '}
+                  на рынке.
+                </p>
+              </div>
+
+              {/* Mini checklist */}
+              <ul className="space-y-2.5">
+                {['Своя торговая система', 'Контроль риска на каждой сделке', 'Проп-счёт сразу в работу'].map((item, i) => (
+                  <li key={i} className="flex items-center gap-2.5 text-sm text-white/60">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" className="flex-shrink-0 text-accent-green">
+                      <circle cx="8" cy="8" r="7" stroke="currentColor" strokeWidth="1.2"/>
+                      <path d="M5 8l2 2 4-4" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                    {item}
+                  </li>
+                ))}
+              </ul>
+
+              {/* CTA Button */}
+              <motion.a
+                href="#courses"
+                className="inline-flex items-center justify-center gap-2 bg-accent-green text-[#08090E] text-sm font-bold px-5 py-3 rounded-xl w-full"
+                whileHover={{ scale: 1.03, boxShadow: '0 0 24px rgba(0,212,170,0.45)' }}
+                whileTap={{ scale: 0.97 }}
+              >
+                Записаться на курс
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                  <path d="M3 7h8M8 4l3 3-3 3" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </motion.a>
             </div>
-            <motion.a
-              href="#courses"
-              className="flex-shrink-0 inline-flex items-center gap-2 bg-accent-green text-[#08090E] text-sm font-bold px-5 py-2.5 rounded-lg"
-              whileHover={{ scale: 1.04, boxShadow: '0 0 20px rgba(0,212,170,0.4)' }}
-              whileTap={{ scale: 0.97 }}
-            >
-              Записаться на курс
-              <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                <path d="M3 7h8M8 4l3 3-3 3" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-            </motion.a>
+          </motion.div>
+
+          {/* RIGHT — module accordion */}
+          <div className="flex-1 min-w-0">
+            <div className="grid grid-cols-1 gap-2.5">
+              {modules.map((mod, i) => (
+                <ModuleCard key={mod.num} mod={mod} index={i} inView={inView} />
+              ))}
+            </div>
           </div>
-        </motion.div>
+
+        </div>
 
       </div>
     </section>
