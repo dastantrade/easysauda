@@ -3,7 +3,6 @@
 import { useRef, useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { motion, useInView } from 'framer-motion';
-import Card from '@/components/ui/Card';
 
 // Number odometer hook — counts up when entering viewport
 function useCountUp(target, suffix = '', duration = 1600) {
@@ -22,7 +21,6 @@ function useCountUp(target, suffix = '', duration = 1600) {
     const tick = (now) => {
       const elapsed = now - startTime;
       const progress = Math.min(elapsed / duration, 1);
-      // easeOutExpo
       const eased = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
       const current = Math.round(eased * numeric);
       setDisplay(String(current) + suffix);
@@ -48,23 +46,182 @@ function OdometerStat({ value, rawNum, suf, label, prefix }) {
   );
 }
 
+/* ── Stacking Photo Gallery ─────────────────────────────────── */
+
+// Grain SVG filter (defined once, hidden)
+function GrainDef() {
+  return (
+    <svg width="0" height="0" className="absolute pointer-events-none" aria-hidden="true">
+      <defs>
+        <filter id="about-grain" x="0%" y="0%" width="100%" height="100%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.72" numOctaves="4" stitchTiles="stitch" result="noise"/>
+          <feColorMatrix type="saturate" values="0" in="noise" result="grayNoise"/>
+          <feComposite in="grayNoise" in2="SourceGraphic" operator="in" result="maskedNoise"/>
+          <feBlend in="SourceGraphic" in2="maskedNoise" mode="overlay"/>
+        </filter>
+      </defs>
+    </svg>
+  );
+}
+
+const photos = [
+  {
+    src: '/about/cert.jpg',
+    alt: 'Сертификат Topstep Funded Trader',
+    rotate: -11,
+    tx: -52,
+    ty: 18,
+    scale: 0.84,
+    brightness: 0.45,
+    zIndex: 0,
+  },
+  {
+    src: '/about/payouts.jpg',
+    alt: 'Выплаты с проп-счёта',
+    rotate: -4,
+    tx: -22,
+    ty: 7,
+    scale: 0.91,
+    brightness: 0.62,
+    zIndex: 1,
+  },
+  {
+    src: '/about/chart.jpg',
+    alt: 'Реальная сделка на графике',
+    rotate: 4,
+    tx: 18,
+    ty: 5,
+    scale: 0.95,
+    brightness: 0.78,
+    zIndex: 2,
+  },
+  {
+    src: '/about/desk.jpg',
+    alt: 'За рабочим местом',
+    rotate: 1,
+    tx: 0,
+    ty: 0,
+    scale: 1.0,
+    brightness: 1.0,
+    zIndex: 3,
+  },
+];
+
+function StackingGallery() {
+  const [hovered, setHovered] = useState(false);
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true, margin: '-60px' });
+
+  return (
+    <div ref={ref} className="relative w-full flex items-center justify-center" style={{ height: 380 }}>
+      <GrainDef />
+
+      {photos.map((photo, i) => {
+        // Fan out wider on hover
+        const fanMult = hovered ? 1.6 : 1;
+        const tx = photo.tx * fanMult;
+        const ty = hovered ? photo.ty * 0.5 : photo.ty;
+        const scale = hovered ? (photo.scale + (i === 3 ? 0.02 : -0.01)) : photo.scale;
+        const brightness = hovered ? Math.min(photo.brightness + 0.15, 1) : photo.brightness;
+
+        return (
+          <motion.div
+            key={photo.src}
+            className="absolute cursor-pointer"
+            style={{ zIndex: photo.zIndex }}
+            initial={{ opacity: 0, scale: 0.85, rotate: photo.rotate }}
+            animate={inView ? {
+              opacity: 1,
+              scale,
+              rotate: photo.rotate,
+              x: tx,
+              y: ty,
+            } : {}}
+            whileHover={{ zIndex: 10, scale: 1.04 }}
+            transition={{
+              delay: 0.08 * i,
+              duration: 0.55,
+              ease: [0.22, 1, 0.36, 1],
+            }}
+            onMouseEnter={() => setHovered(true)}
+            onMouseLeave={() => setHovered(false)}
+          >
+            {/* Card shell */}
+            <div
+              className="relative overflow-hidden"
+              style={{
+                width: 240,
+                height: 290,
+                borderRadius: 20,
+                boxShadow: photo.zIndex === 3
+                  ? '0 24px 64px rgba(0,0,0,0.55), 0 0 0 1px rgba(0,212,170,0.18)'
+                  : '0 12px 32px rgba(0,0,0,0.45)',
+              }}
+            >
+              {/* Photo */}
+              <img
+                src={photo.src}
+                alt={photo.alt}
+                draggable={false}
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                  filter: `brightness(${brightness}) url(#about-grain)`,
+                  userSelect: 'none',
+                }}
+                onError={(e) => {
+                  // Fallback: show placeholder if image missing
+                  e.currentTarget.style.display = 'none';
+                  e.currentTarget.parentElement.style.background = 'rgba(255,255,255,0.04)';
+                }}
+              />
+
+              {/* Brand tint overlay — cool teal/blue shift */}
+              <div
+                className="absolute inset-0 pointer-events-none"
+                style={{
+                  background: 'linear-gradient(160deg, rgba(0,212,170,0.10) 0%, rgba(0,80,180,0.12) 100%)',
+                  mixBlendMode: 'color',
+                }}
+              />
+
+              {/* Bottom vignette */}
+              <div
+                className="absolute inset-0 pointer-events-none"
+                style={{
+                  background: 'linear-gradient(to top, rgba(0,0,0,0.55) 0%, transparent 50%)',
+                }}
+              />
+
+              {/* Front card: label */}
+              {photo.zIndex === 3 && (
+                <div className="absolute bottom-3 left-3 right-3">
+                  <span
+                    className="text-[10px] font-mono font-bold tracking-widest uppercase"
+                    style={{ color: 'rgba(0,212,170,0.85)' }}
+                  >
+                    EASYSAUDA
+                  </span>
+                </div>
+              )}
+            </div>
+          </motion.div>
+        );
+      })}
+    </div>
+  );
+}
+
 export default function About() {
   const t = useTranslations('about');
   const contentRef = useRef(null);
   const contentInView = useInView(contentRef, { once: true, margin: '-60px' });
-  const photoRef = useRef(null);
-  const photoInView = useInView(photoRef, { once: true, margin: '-60px' });
 
   const stats = [
     { value: '2+',   rawNum: '2',   suf: '+', label: 'лет опыта' },
     { value: 'MNQ',  rawNum: null,  suf: '',  label: 'мой инструмент' },
     { value: '$200', rawNum: '200', suf: '',  label: 'тейк в день', prefix: '$' },
-  ];
-
-  const bullets = [
-    'В рекламе — заявки и продажи для бизнеса',
-    'В рынке — контроль риска и стабильный результат',
-    'Показываю реальные сделки, не симуляции',
   ];
 
   return (
@@ -75,43 +232,26 @@ export default function About() {
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
 
-          {/* Photo placeholder */}
+          {/* ── Left: Stacking photo gallery ── */}
           <motion.div
-            ref={photoRef}
             initial={{ opacity: 0, x: -40 }}
-            animate={photoInView ? { opacity: 1, x: 0 } : {}}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: '-60px' }}
             transition={{ duration: 0.7, ease: 'easeOut' }}
           >
-            <div className="relative">
-              <div className="w-full aspect-square max-w-md mx-auto bg-dark-card rounded-2xl border border-dark-border overflow-hidden flex items-center justify-center relative">
-                {/* Teal corner accent */}
-                <div className="absolute top-0 right-0 w-24 h-24 pointer-events-none"
-                  style={{ background: 'radial-gradient(circle at top right, rgba(0,212,170,0.12), transparent 70%)' }} />
-                <div className="text-center p-8">
-                  <motion.div
-                    className="w-32 h-32 bg-accent-green/8 rounded-full mx-auto mb-4 flex items-center justify-center border border-accent-green/15"
-                    whileHover={{ scale: 1.04, borderColor: 'rgba(0,212,170,0.30)' }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    <svg className="w-16 h-16 text-accent-green/60" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
-                    </svg>
-                  </motion.div>
-                  <p className="text-white/35 text-sm">Ваше фото</p>
-                </div>
-              </div>
-              <div className="absolute -bottom-4 -right-4 w-24 h-24 bg-accent-green/8 rounded-xl -z-10 border border-accent-green/10" />
-              <div className="absolute -top-3 -left-3 w-16 h-16 bg-[#00B8FF]/6 rounded-xl -z-10 border border-[#00B8FF]/10" />
-            </div>
+            <StackingGallery />
           </motion.div>
 
-          {/* Content */}
+          {/* ── Right: Content ── */}
           <motion.div
             ref={contentRef}
             initial={{ opacity: 0, x: 40 }}
             animate={contentInView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.7, ease: 'easeOut', delay: 0.1 }}
           >
+            <div className="inline-flex items-center px-3 py-1 rounded-full border border-accent-green/20 bg-accent-green/[0.06] text-accent-green text-[11px] font-mono tracking-widest uppercase mb-4">
+              Преподаватель
+            </div>
             <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
               {t('title')}
             </h2>
