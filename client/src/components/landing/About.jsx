@@ -315,7 +315,7 @@ export default function About() {
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
 
-          {/* ── Left: Personal photo ── */}
+          {/* ── Left: Personal photo — edge-blended into background ── */}
           <motion.div
             initial={{ opacity: 0, x: -40 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -323,25 +323,38 @@ export default function About() {
             transition={{ duration: 0.7, ease: 'easeOut' }}
             className="flex justify-center lg:justify-start"
           >
-            <div
-              className="relative w-full max-w-sm aspect-[4/5] rounded-3xl overflow-hidden"
-              style={{ boxShadow: '0 24px 64px rgba(0,0,0,0.55), 0 0 0 1px rgba(0,212,170,0.12)' }}
-            >
+            <div className="relative w-full max-w-sm aspect-[4/5]">
+              {/* Photo */}
               <img
                 src="/about/desk.jpg"
                 alt="Dastan за работой"
                 draggable={false}
-                style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                  display: 'block',
+                  borderRadius: 16,
+                }}
               />
               {/* Brand tint */}
-              <div className="absolute inset-0 pointer-events-none"
-                style={{ background: 'linear-gradient(160deg, rgba(0,212,170,0.07) 0%, rgba(0,60,180,0.09) 100%)', mixBlendMode: 'color' }} />
-              {/* Bottom vignette */}
-              <div className="absolute inset-0 pointer-events-none"
-                style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.50) 0%, transparent 50%)' }} />
-              {/* Corner glow */}
-              <div className="absolute top-0 right-0 w-32 h-32 pointer-events-none"
-                style={{ background: 'radial-gradient(circle at top right, rgba(0,212,170,0.10), transparent 70%)' }} />
+              <div className="absolute inset-0 pointer-events-none" style={{ borderRadius: 16,
+                background: 'linear-gradient(160deg, rgba(0,212,170,0.06) 0%, rgba(0,60,180,0.08) 100%)',
+                mixBlendMode: 'color' }} />
+
+              {/* ── Edge fades — dissolve into #08090E ── */}
+              {/* Top */}
+              <div className="absolute inset-x-0 top-0 pointer-events-none" style={{ height: '35%',
+                background: 'linear-gradient(to bottom, #08090E 0%, transparent 100%)' }} />
+              {/* Bottom */}
+              <div className="absolute inset-x-0 bottom-0 pointer-events-none" style={{ height: '45%',
+                background: 'linear-gradient(to top, #08090E 0%, transparent 100%)' }} />
+              {/* Left */}
+              <div className="absolute inset-y-0 left-0 pointer-events-none" style={{ width: '30%',
+                background: 'linear-gradient(to right, #08090E 0%, transparent 100%)' }} />
+              {/* Right */}
+              <div className="absolute inset-y-0 right-0 pointer-events-none" style={{ width: '30%',
+                background: 'linear-gradient(to left, #08090E 0%, transparent 100%)' }} />
             </div>
           </motion.div>
 
