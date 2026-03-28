@@ -323,7 +323,7 @@ export default function About() {
             transition={{ duration: 0.7, ease: 'easeOut' }}
             className="flex justify-center lg:justify-start"
           >
-            <div className="relative w-full max-w-sm aspect-[4/5]">
+            <div className="relative w-full aspect-[16/10]">
               {/* Photo */}
               <img
                 src="/about/desk.jpg"
