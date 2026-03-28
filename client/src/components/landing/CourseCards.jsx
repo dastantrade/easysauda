@@ -2,56 +2,78 @@
 
 import { useRef, useCallback } from 'react';
 import { motion, useInView } from 'framer-motion';
-import { useTranslations, useLocale } from 'next-intl';
-import { Link } from '@/i18n/routing';
-import Badge from '@/components/ui/Badge';
-import Button from '@/components/ui/Button';
-import { formatPrice, getLocalizedField } from '@/lib/utils';
 
-const demoCourses = [
+/* ── Check icon ── */
+const IconCheck = () => (
+  <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+    <path d="M2.5 7l3 3 6-6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+);
+
+/* ── Arrow icon ── */
+const IconArrow = () => (
+  <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+    <path d="M3 7h8M8 4l3 3-3 3" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+);
+
+/* ── Users icon ── */
+const IconGroup = () => (
+  <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+    <circle cx="8" cy="7" r="3" stroke="currentColor" strokeWidth="1.4"/>
+    <circle cx="15" cy="8" r="2.5" stroke="currentColor" strokeWidth="1.4" opacity="0.6"/>
+    <path d="M2 18c0-3.314 2.686-5 6-5s6 1.686 6 5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/>
+    <path d="M15 14c2 0 4 1 4 4" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" opacity="0.6"/>
+  </svg>
+);
+
+/* ── Single person icon ── */
+const IconSolo = () => (
+  <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+    <circle cx="11" cy="7" r="3.5" stroke="currentColor" strokeWidth="1.4"/>
+    <path d="M3.5 19c0-4.142 3.358-7 7.5-7s7.5 2.858 7.5 7" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/>
+    <path d="M15 10l1.5 1.5M16.5 10L15 11.5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" opacity="0.5"/>
+  </svg>
+);
+
+const plans = [
   {
-    slug: 'osnovy-trejdinga',
-    titleRu: 'Основы трейдинга',
-    titleKz: 'Трейдинг негіздері',
-    shortDescriptionRu: 'Научитесь торговать с нуля за 4 недели',
-    shortDescriptionKz: 'Нөлден бастап 4 аптада сауда жасауды үйреніңіз',
-    price: 29990,
-    originalPrice: 49990,
-    level: 'BEGINNER',
-    totalLessons: 8,
-    totalDurationHours: 12,
+    id: 'group',
+    badge: 'Групповой',
+    title: 'Менторшип',
+    format: 'Мини-группа · 3–5 участников',
+    Icon: IconGroup,
+    for: 'Тем, кому важна поддержка единомышленников и структурное обучение',
+    features: [
+      'Полный доступ к платформе с уроками',
+      'Общие созвоны 2 раза в неделю (разбор сделок)',
+      'Закрытый чат группы для обмена опытом',
+      'Проверка домашних заданий лично мной',
+    ],
+    price: '300 000',
+    currency: '₸',
+    highlight: false,
+    ctaLabel: 'Записаться в группу',
   },
   {
-    slug: 'tekhnicheskij-analiz',
-    titleRu: 'Технический анализ PRO',
-    titleKz: 'Техникалық талдау PRO',
-    shortDescriptionRu: 'Освойте профессиональный технический анализ',
-    shortDescriptionKz: 'Кәсіби техникалық талдауды меңгеріңіз',
-    price: 49990,
-    originalPrice: 79990,
-    level: 'INTERMEDIATE',
-    totalLessons: 12,
-    totalDurationHours: 18,
-  },
-  {
-    slug: 'upravlenie-riskami',
-    titleRu: 'Управление рисками',
-    titleKz: 'Тәуекелдерді басқару',
-    shortDescriptionRu: 'Не теряйте деньги — управляйте рисками',
-    shortDescriptionKz: 'Ақша жоғалтпаңыз — тәуекелдерді басқарыңыз',
-    price: 39990,
-    originalPrice: null,
-    level: 'INTERMEDIATE',
-    totalLessons: 6,
-    totalDurationHours: 8,
+    id: 'personal',
+    badge: 'Индивидуально',
+    title: 'Personal 1-on-1',
+    format: 'Личное наставничество',
+    Icon: IconSolo,
+    for: 'Тем, кто ценит время и хочет максимально быстрый результат под контролем',
+    features: [
+      'Персональный график обучения',
+      'Личные созвоны — разбираем только твои графики и психологию',
+      'Моя поддержка 24/7',
+      'Ускоренный результат без лишних шагов',
+    ],
+    price: '500 000',
+    currency: '₸',
+    highlight: true,
+    ctaLabel: 'Начать лично со мной',
   },
 ];
-
-const levelBadge = {
-  BEGINNER:     { label: 'beginner',     variant: 'green' },
-  INTERMEDIATE: { label: 'intermediate', variant: 'blue' },
-  ADVANCED:     { label: 'advanced',     variant: 'red' },
-};
 
 // 3D Perspective Tilt wrapper
 function TiltCard({ children, className = '' }) {
@@ -63,10 +85,10 @@ function TiltCard({ children, className = '' }) {
     const rect = el.getBoundingClientRect();
     const cx = rect.left + rect.width / 2;
     const cy = rect.top + rect.height / 2;
-    const dx = (e.clientX - cx) / (rect.width / 2);   // -1 … 1
-    const dy = (e.clientY - cy) / (rect.height / 2);  // -1 … 1
-    el.style.transform = `perspective(900px) rotateX(${-dy * 6}deg) rotateY(${dx * 6}deg) scale(1.025)`;
-    el.style.boxShadow = `${-dx * 12}px ${-dy * 12}px 40px rgba(0,212,170,0.10)`;
+    const dx = (e.clientX - cx) / (rect.width / 2);
+    const dy = (e.clientY - cy) / (rect.height / 2);
+    el.style.transform = `perspective(900px) rotateX(${-dy * 5}deg) rotateY(${dx * 5}deg) scale(1.02)`;
+    el.style.boxShadow = `${-dx * 10}px ${-dy * 10}px 40px rgba(0,212,170,0.10)`;
   }, []);
 
   const handleLeave = useCallback(() => {
@@ -90,8 +112,6 @@ function TiltCard({ children, className = '' }) {
 }
 
 export default function CourseCards() {
-  const t = useTranslations('courses');
-  const locale = useLocale();
   const headerRef = useRef(null);
   const headerInView = useInView(headerRef, { once: true });
 
@@ -107,6 +127,7 @@ export default function CourseCards() {
       />
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
         {/* Header */}
         <motion.div
           ref={headerRef}
@@ -115,91 +136,191 @@ export default function CourseCards() {
           animate={headerInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6 }}
         >
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-[#00B8FF]/20 bg-[#00B8FF]/8 text-[#00B8FF] text-[11px] font-mono tracking-widest uppercase mb-4">
-            Программы обучения
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-[#00B8FF]/20 bg-[#00B8FF]/[0.06] text-[#00B8FF] text-[11px] font-mono tracking-widest uppercase mb-4">
+            Форматы участия
           </div>
-          <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">{t('title')}</h2>
-          <p className="text-white/45 max-w-xl mx-auto">{t('subtitle')}</p>
+          <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
+            Тарифы обучения
+          </h2>
+          <p className="text-white/45 max-w-xl mx-auto">
+            Выберите формат участия и начните путь к профессиональному трейдингу.
+          </p>
         </motion.div>
 
-        {/* Cards grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {demoCourses.map((course, cardIndex) => {
-            const badge = levelBadge[course.level];
-            return (
-              <motion.div
-                key={course.slug}
-                initial={{ opacity: 0, y: 32 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: '-60px' }}
-                transition={{ duration: 0.55, delay: cardIndex * 0.12, ease: 'easeOut' }}
-              >
-                <TiltCard>
-                  <div className="h-full glass-card rounded-2xl p-6 flex flex-col border border-white/[0.07] hover:border-white/[0.12] transition-colors duration-300">
-                    {/* Thumbnail */}
-                    <div className="w-full h-44 rounded-xl mb-5 flex items-center justify-center border border-white/[0.06] bg-white/[0.025] relative overflow-hidden">
-                      {/* Subtle inner glow */}
-                      <div className="absolute inset-0"
-                        style={{ background: 'radial-gradient(circle at 50% 100%, rgba(0,212,170,0.06), transparent 70%)' }} />
-                      <motion.div
-                        whileHover={{ scale: 1.12, color: '#00D4AA' }}
-                        transition={{ duration: 0.25 }}
+        {/* Cards — 2 columns, centered */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto">
+          {plans.map((plan, i) => (
+            <motion.div
+              key={plan.id}
+              className="h-full"
+              initial={{ opacity: 0, y: 32 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-60px' }}
+              transition={{ duration: 0.55, delay: i * 0.14, ease: 'easeOut' }}
+            >
+              <TiltCard className="h-full">
+                <div
+                  className="relative h-full rounded-2xl flex flex-col overflow-hidden"
+                  style={plan.highlight ? {
+                    background: 'linear-gradient(160deg, rgba(0,212,170,0.10) 0%, rgba(10,12,18,0.98) 55%, rgba(0,40,160,0.07) 100%)',
+                    border: '1px solid rgba(0,212,170,0.35)',
+                    boxShadow: '0 0 48px rgba(0,212,170,0.10), inset 0 1px 0 rgba(0,212,170,0.15)',
+                  } : {
+                    background: 'rgba(255,255,255,0.025)',
+                    border: '1px solid rgba(255,255,255,0.08)',
+                  }}
+                >
+                  {/* Popular label */}
+                  {plan.highlight && (
+                    <div className="absolute top-4 right-4">
+                      <span className="text-[10px] font-bold tracking-[0.18em] uppercase text-accent-green bg-accent-green/10 border border-accent-green/25 rounded-full px-2.5 py-0.5">
+                        Популярный
+                      </span>
+                    </div>
+                  )}
+
+                  {/* Inner glow for highlight */}
+                  {plan.highlight && (
+                    <div
+                      className="absolute inset-0 pointer-events-none rounded-2xl"
+                      style={{ background: 'radial-gradient(ellipse 80% 40% at 50% 0%, rgba(0,212,170,0.08) 0%, transparent 65%)' }}
+                    />
+                  )}
+
+                  <div className="relative p-7 flex flex-col gap-6 flex-1">
+
+                    {/* Icon + Badge row */}
+                    <div className="flex items-start gap-4">
+                      <div
+                        className="flex-shrink-0 w-11 h-11 rounded-xl flex items-center justify-center"
+                        style={plan.highlight ? {
+                          background: 'rgba(0,212,170,0.12)',
+                          border: '1px solid rgba(0,212,170,0.25)',
+                          color: '#00D4AA',
+                        } : {
+                          background: 'rgba(255,255,255,0.05)',
+                          border: '1px solid rgba(255,255,255,0.10)',
+                          color: 'rgba(255,255,255,0.45)',
+                        }}
                       >
-                        <svg className="w-12 h-12 text-white/20 relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z" />
-                        </svg>
-                      </motion.div>
+                        <plan.Icon />
+                      </div>
+                      <div>
+                        <div
+                          className="text-[10px] font-bold tracking-[0.18em] uppercase mb-0.5"
+                          style={{ color: plan.highlight ? '#00D4AA' : 'rgba(255,255,255,0.35)' }}
+                        >
+                          {plan.badge}
+                        </div>
+                        <div className="text-xl font-bold text-white">{plan.title}</div>
+                        <div className="text-[12px] text-white/35 mt-0.5">{plan.format}</div>
+                      </div>
                     </div>
 
-                    {/* Badge */}
-                    <Badge variant={badge.variant} className="self-start mb-3">
-                      {t(badge.label)}
-                    </Badge>
-
-                    {/* Title */}
-                    <h3 className="text-lg font-bold text-white mb-2">
-                      {getLocalizedField(course, 'title', locale)}
-                    </h3>
-
-                    {/* Description */}
-                    <p className="text-white/42 text-sm mb-5 flex-grow leading-relaxed">
-                      {getLocalizedField(course, 'shortDescription', locale)}
+                    {/* For whom */}
+                    <p className="text-[13px] text-white/40 leading-relaxed border-l-2 pl-3"
+                      style={{ borderColor: plan.highlight ? 'rgba(0,212,170,0.35)' : 'rgba(255,255,255,0.10)' }}>
+                      {plan.for}
                     </p>
 
-                    {/* Meta */}
-                    <div className="flex items-center gap-4 text-xs text-white/35 mb-5">
-                      <span className="flex items-center gap-1.5">
-                        <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
-                        </svg>
-                        {course.totalLessons} {t('lessons')}
-                      </span>
-                      <span className="flex items-center gap-1.5">
-                        <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                        {course.totalDurationHours} {t('hours')}
-                      </span>
-                    </div>
+                    {/* Features */}
+                    <ul className="flex flex-col gap-3 flex-1">
+                      {plan.features.map((f, fi) => (
+                        <motion.li
+                          key={fi}
+                          className="flex items-start gap-2.5 text-[13px] text-white/55 leading-snug"
+                          initial={{ opacity: 0, x: -6 }}
+                          whileInView={{ opacity: 1, x: 0 }}
+                          viewport={{ once: true }}
+                          transition={{ delay: 0.1 + fi * 0.06, duration: 0.3 }}
+                        >
+                          <span
+                            className="flex-shrink-0 mt-[1px] w-5 h-5 rounded-md flex items-center justify-center"
+                            style={plan.highlight ? {
+                              background: 'rgba(0,212,170,0.12)',
+                              color: '#00D4AA',
+                            } : {
+                              background: 'rgba(255,255,255,0.05)',
+                              color: 'rgba(255,255,255,0.35)',
+                            }}
+                          >
+                            <IconCheck />
+                          </span>
+                          {f}
+                        </motion.li>
+                      ))}
+                    </ul>
+
+                    {/* Divider */}
+                    <div
+                      className="h-px"
+                      style={{ background: plan.highlight ? 'rgba(0,212,170,0.15)' : 'rgba(255,255,255,0.06)' }}
+                    />
 
                     {/* Price + CTA */}
-                    <div className="flex items-center justify-between pt-4 border-t border-white/[0.06]">
+                    <div className="flex flex-col gap-4">
                       <div>
-                        <span className="text-xl font-bold text-accent-green">{formatPrice(course.price)}</span>
-                        {course.originalPrice && (
-                          <span className="text-xs text-white/30 line-through ml-2">{formatPrice(course.originalPrice)}</span>
-                        )}
+                        <span
+                          className="text-3xl font-black tracking-tight"
+                          style={{ color: plan.highlight ? '#00D4AA' : 'rgba(255,255,255,0.85)' }}
+                        >
+                          {plan.price}
+                        </span>
+                        <span className="text-lg font-bold ml-1" style={{ color: plan.highlight ? '#00D4AA' : 'rgba(255,255,255,0.50)' }}>
+                          {plan.currency}
+                        </span>
                       </div>
-                      <Link href={`/courses/${course.slug}`}>
-                        <Button size="sm">{t('enrollButton')}</Button>
-                      </Link>
+
+                      <motion.a
+                        href="https://t.me/easysauda"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center justify-center gap-2 text-sm font-bold px-5 py-3 rounded-xl w-full transition-colors duration-200"
+                        style={plan.highlight ? {
+                          background: '#00D4AA',
+                          color: '#08090E',
+                        } : {
+                          background: 'rgba(255,255,255,0.06)',
+                          color: 'rgba(255,255,255,0.75)',
+                          border: '1px solid rgba(255,255,255,0.10)',
+                        }}
+                        whileHover={plan.highlight ? {
+                          scale: 1.03,
+                          boxShadow: '0 0 28px rgba(0,212,170,0.45)',
+                        } : {
+                          scale: 1.02,
+                          background: 'rgba(255,255,255,0.09)',
+                        }}
+                        whileTap={{ scale: 0.97 }}
+                      >
+                        {plan.ctaLabel}
+                        <IconArrow />
+                      </motion.a>
                     </div>
+
                   </div>
-                </TiltCard>
-              </motion.div>
-            );
-          })}
+                </div>
+              </TiltCard>
+            </motion.div>
+          ))}
         </div>
+
+        {/* Bottom note */}
+        <motion.p
+          className="text-center text-[12px] text-white/25 mt-8"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.5, duration: 0.5 }}
+        >
+          Есть вопросы? Напишите в{' '}
+          <a href="https://t.me/easysauda" target="_blank" rel="noopener noreferrer"
+            className="text-accent-green/60 hover:text-accent-green transition-colors underline underline-offset-2">
+            Telegram
+          </a>{' '}
+          — отвечаю лично.
+        </motion.p>
+
       </div>
     </section>
   );
