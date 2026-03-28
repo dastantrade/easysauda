@@ -213,12 +213,12 @@ function StackingGallery() {
   );
 }
 
-/* ── Horizontal Photo Strip ──────────────────────────────────── */
+/* ── Full-bleed Photo Strip (AI CAMP style) ──────────────────── */
 const stripPhotos = [
-  { src: '/about/desk.jpg',    alt: 'За рабочим местом',           rotate: -2.5, y: 10 },
+  { src: '/about/desk.jpg',    alt: 'За рабочим местом',           rotate: -2,   y: 20 },
   { src: '/about/chart.jpg',   alt: 'Реальная сделка на графике',  rotate:  1.5, y: 0  },
-  { src: '/about/payouts.jpg', alt: 'Выплаты с проп-счёта',        rotate: -1.5, y: 6  },
-  { src: '/about/cert.jpg',    alt: 'Сертификат Topstep',          rotate:  2,   y: 3  },
+  { src: '/about/payouts.jpg', alt: 'Выплаты с проп-счёта',        rotate: -1,   y: 12 },
+  { src: '/about/cert.jpg',    alt: 'Сертификат Topstep',          rotate:  2,   y: 6  },
 ];
 
 function PhotoStrip() {
@@ -226,44 +226,34 @@ function PhotoStrip() {
   const inView = useInView(ref, { once: true, margin: '-40px' });
 
   return (
-    <div ref={ref} className="relative mt-14 -mx-4 sm:-mx-6 lg:-mx-8 overflow-hidden">
-      {/* Left fade */}
-      <div className="absolute left-0 top-0 bottom-0 w-24 z-10 pointer-events-none"
-        style={{ background: 'linear-gradient(to right, #08090E 0%, transparent 100%)' }} />
-      {/* Right fade */}
-      <div className="absolute right-0 top-0 bottom-0 w-24 z-10 pointer-events-none"
-        style={{ background: 'linear-gradient(to left, #08090E 0%, transparent 100%)' }} />
-
-      <div className="flex gap-4 justify-center px-6 pb-2" style={{ paddingTop: 12 }}>
+    <div ref={ref} className="relative mt-16 w-full overflow-hidden">
+      <div
+        className="flex justify-center items-end"
+        style={{ gap: 'clamp(10px, 1.5vw, 20px)', paddingLeft: 'clamp(8px, 2vw, 24px)', paddingRight: 'clamp(8px, 2vw, 24px)' }}
+      >
         {stripPhotos.map((photo, i) => (
           <motion.div
             key={photo.src}
-            initial={{ opacity: 0, y: 40 }}
+            initial={{ opacity: 0, y: 60 }}
             animate={inView ? { opacity: 1, y: photo.y } : {}}
-            transition={{ delay: 0.08 * i, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-            whileHover={{ y: photo.y - 8, scale: 1.03, zIndex: 10 }}
-            style={{ rotate: `${photo.rotate}deg`, position: 'relative' }}
+            transition={{ delay: 0.1 * i, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+            whileHover={{ y: photo.y - 10, scale: 1.02, zIndex: 10 }}
+            style={{ rotate: `${photo.rotate}deg`, flexShrink: 0 }}
           >
             <div
-              className="relative overflow-hidden flex-shrink-0"
+              className="relative overflow-hidden"
               style={{
-                width: 'clamp(220px, 22vw, 340px)',
-                height: 'clamp(150px, 15vw, 230px)',
-                borderRadius: 20,
-                boxShadow: '0 16px 48px rgba(0,0,0,0.50), 0 0 0 1px rgba(255,255,255,0.06)',
+                width:  'clamp(260px, 23vw, 380px)',
+                height: 'clamp(190px, 17vw, 280px)',
+                borderRadius: 'clamp(16px, 1.5vw, 24px)',
+                boxShadow: '0 20px 60px rgba(0,0,0,0.55), 0 0 0 1px rgba(255,255,255,0.07)',
               }}
             >
               <img
                 src={photo.src}
                 alt={photo.alt}
                 draggable={false}
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  objectFit: 'cover',
-                  userSelect: 'none',
-                  display: 'block',
-                }}
+                style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', userSelect: 'none' }}
                 onError={(e) => {
                   e.currentTarget.parentElement.style.background = 'rgba(255,255,255,0.04)';
                   e.currentTarget.style.display = 'none';
@@ -271,15 +261,10 @@ function PhotoStrip() {
               />
               {/* Brand tint */}
               <div className="absolute inset-0 pointer-events-none"
-                style={{
-                  background: 'linear-gradient(135deg, rgba(0,212,170,0.08) 0%, rgba(0,80,200,0.10) 100%)',
-                  mixBlendMode: 'color',
-                }}
-              />
-              {/* Vignette */}
+                style={{ background: 'linear-gradient(135deg, rgba(0,212,170,0.07) 0%, rgba(0,60,180,0.09) 100%)', mixBlendMode: 'color' }} />
+              {/* Bottom vignette */}
               <div className="absolute inset-0 pointer-events-none"
-                style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.40) 0%, transparent 55%)' }}
-              />
+                style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.45) 0%, transparent 50%)' }} />
             </div>
           </motion.div>
         ))}
@@ -300,7 +285,7 @@ export default function About() {
   ];
 
   return (
-    <section className="relative py-20 overflow-hidden" id="about">
+    <section className="relative pt-20 pb-0 overflow-x-hidden" id="about">
       {/* Subtle dot pattern */}
       <div className="absolute inset-0 dot-pattern opacity-30 pointer-events-none" />
 
