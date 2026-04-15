@@ -199,12 +199,12 @@ export default function Hero() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.6 }}
           >
-            <Link href="/courses">
+            <a href="#courses">
               <Button size="lg" className="animate-pulse-green">{t('cta')}</Button>
-            </Link>
-            <Link href="/courses">
-              <Button variant="glass" size="lg">{t('ctaSecondary')}</Button>
-            </Link>
+            </a>
+            <a href="#program">
+              <Button variant="glass" size="lg">Программа курса</Button>
+            </a>
           </motion.div>
 
         </div>

@@ -50,7 +50,7 @@ const plans = [
       'Закрытый чат группы для обмена опытом',
       'Проверка домашних заданий лично мной',
     ],
-    price: '300 000',
+    price: '500 000',
     currency: '₸',
     highlight: false,
     ctaLabel: 'Записаться в группу',
@@ -68,7 +68,7 @@ const plans = [
       'Моя поддержка 24/7',
       'Ускоренный результат без лишних шагов',
     ],
-    price: '500 000',
+    price: '1 000 000',
     currency: '₸',
     highlight: true,
     ctaLabel: 'Начать лично со мной',
@@ -272,7 +272,7 @@ export default function CourseCards() {
                       </div>
 
                       <motion.a
-                        href="https://t.me/easysauda"
+                        href="https://t.me/dastan_talgatkhanuly"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="inline-flex items-center justify-center gap-2 text-sm font-bold px-5 py-3 rounded-xl w-full transition-colors duration-200"
@@ -314,7 +314,7 @@ export default function CourseCards() {
           transition={{ delay: 0.5, duration: 0.5 }}
         >
           Есть вопросы? Напишите в{' '}
-          <a href="https://t.me/easysauda" target="_blank" rel="noopener noreferrer"
+          <a href="https://t.me/dastan_talgatkhanuly" target="_blank" rel="noopener noreferrer"
             className="text-accent-green/60 hover:text-accent-green transition-colors underline underline-offset-2">
             Telegram
           </a>{' '}

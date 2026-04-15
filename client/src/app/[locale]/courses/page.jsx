@@ -1,144 +1,102 @@
 'use client';
 
-import { useTranslations, useLocale } from 'next-intl';
-import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import { Link } from '@/i18n/routing';
-import Card from '@/components/ui/Card';
-import Badge from '@/components/ui/Badge';
-import Button from '@/components/ui/Button';
-import { formatPrice, getLocalizedField } from '@/lib/utils';
-import api from '@/lib/api';
-
-const levelBadge = {
-  BEGINNER: { label: 'beginner', variant: 'green' },
-  INTERMEDIATE: { label: 'intermediate', variant: 'blue' },
-  ADVANCED: { label: 'advanced', variant: 'red' },
-};
-
-// Fallback data for when API is not available
-const fallbackCourses = [
-  {
-    slug: 'osnovy-trejdinga',
-    titleRu: 'Основы трейдинга',
-    titleKz: 'Трейдинг негіздері',
-    shortDescriptionRu: 'Научитесь торговать с нуля за 4 недели',
-    shortDescriptionKz: 'Нөлден бастап 4 аптада сауда жасауды үйреніңіз',
-    price: 29990,
-    originalPrice: 49990,
-    level: 'BEGINNER',
-    totalLessons: 8,
-    totalDurationHours: 12,
-  },
-  {
-    slug: 'tekhnicheskij-analiz',
-    titleRu: 'Технический анализ PRO',
-    titleKz: 'Техникалық талдау PRO',
-    shortDescriptionRu: 'Освойте профессиональный технический анализ',
-    shortDescriptionKz: 'Кәсіби техникалық талдауды меңгеріңіз',
-    price: 49990,
-    originalPrice: 79990,
-    level: 'INTERMEDIATE',
-    totalLessons: 12,
-    totalDurationHours: 18,
-  },
-  {
-    slug: 'upravlenie-riskami',
-    titleRu: 'Управление рисками',
-    titleKz: 'Тәуекелдерді басқару',
-    shortDescriptionRu: 'Не теряйте деньги — управляйте рисками',
-    shortDescriptionKz: 'Ақша жоғалтпаңыз — тәуекелдерді басқарыңыз',
-    price: 39990,
-    originalPrice: null,
-    level: 'INTERMEDIATE',
-    totalLessons: 6,
-    totalDurationHours: 8,
-  },
-];
 
 export default function CoursesPage() {
-  const t = useTranslations('courses');
-  const locale = useLocale();
-  const [courses, setCourses] = useState(fallbackCourses);
-  const [filter, setFilter] = useState('ALL');
-
-  useEffect(() => {
-    api.get('/courses')
-      .then(res => setCourses(res.data))
-      .catch(() => setCourses(fallbackCourses));
-  }, []);
-
-  const filtered = filter === 'ALL' ? courses : courses.filter(c => c.level === filter);
-
   return (
-    <div className="py-12">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12">
-          <h1 className="text-3xl sm:text-4xl font-bold text-text-primary mb-4">{t('title')}</h1>
-          <p className="text-text-secondary">{t('subtitle')}</p>
-        </div>
+    <div className="min-h-screen flex items-center justify-center py-20 px-4" style={{ background: '#08090E' }}>
 
-        {/* Filters */}
-        <div className="flex justify-center gap-3 mb-10 flex-wrap">
-          {['ALL', 'BEGINNER', 'INTERMEDIATE', 'ADVANCED'].map(level => (
-            <button
-              key={level}
-              onClick={() => setFilter(level)}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors
-                ${filter === level
-                  ? 'bg-accent-green text-dark'
-                  : 'bg-dark-card text-text-secondary border border-dark-border hover:border-accent-green/30'
-                }`}
+      {/* Background glow */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div style={{ background: 'radial-gradient(ellipse 60% 40% at 50% 40%, rgba(0,212,170,0.06) 0%, transparent 70%)' }} className="absolute inset-0" />
+      </div>
+
+      <div className="relative max-w-2xl mx-auto text-center">
+
+        {/* Badge */}
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-accent-green/25 bg-accent-green/[0.07] text-accent-green text-sm font-mono tracking-widest uppercase mb-8"
+        >
+          <span className="w-1.5 h-1.5 rounded-full bg-accent-green animate-pulse" />
+          Скоро
+        </motion.div>
+
+        {/* Heading */}
+        <motion.h1
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.1 }}
+          className="text-4xl sm:text-5xl font-bold text-white mb-6 leading-tight"
+        >
+          Видеокурс для<br />
+          <span className="text-gradient">самостоятельной подготовки</span>
+        </motion.h1>
+
+        {/* Description */}
+        <motion.p
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className="text-white/50 text-lg leading-relaxed mb-10 max-w-lg mx-auto"
+        >
+          Полная программа обучения в формате видеоуроков. Учись в своём темпе — без привязки к расписанию, с доступом навсегда.
+        </motion.p>
+
+        {/* Features */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.3 }}
+          className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-10"
+        >
+          {[
+            { icon: '🎬', label: 'Видеоуроки', sub: 'Структурированная программа' },
+            { icon: '⏱', label: 'Свой темп', sub: 'Доступ навсегда' },
+            { icon: '📊', label: 'Практика', sub: 'Реальные разборы сделок' },
+          ].map((f, i) => (
+            <div
+              key={i}
+              className="rounded-xl p-4 text-center"
+              style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)' }}
             >
-              {level === 'ALL' ? (locale === 'kz' ? 'Барлығы' : 'Все') : t(levelBadge[level].label)}
-            </button>
+              <div className="text-2xl mb-2">{f.icon}</div>
+              <div className="text-white text-sm font-semibold mb-1">{f.label}</div>
+              <div className="text-white/35 text-xs">{f.sub}</div>
+            </div>
           ))}
-        </div>
+        </motion.div>
 
-        {/* Course Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filtered.map((course) => {
-            const badge = levelBadge[course.level];
-            return (
-              <Card key={course.slug} hover className="flex flex-col">
-                <div className="w-full h-48 bg-dark rounded-lg mb-4 flex items-center justify-center border border-dark-border">
-                  <svg className="w-12 h-12 text-text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                </div>
+        {/* CTA */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.4 }}
+          className="flex flex-col sm:flex-row gap-3 justify-center"
+        >
+          <a
+            href="https://t.me/dastan_talgatkhanuly"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center justify-center gap-2 bg-accent-green text-[#08090E] font-bold px-6 py-3 rounded-xl text-sm"
+            style={{ boxShadow: '0 0 24px rgba(0,212,170,0.30)' }}
+          >
+            Узнать о старте
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+              <path d="M3 7h8M8 4l3 3-3 3" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </a>
+          <Link
+            href="/"
+            className="inline-flex items-center justify-center gap-2 text-white/50 font-medium px-6 py-3 rounded-xl text-sm border border-white/[0.08] hover:border-white/20 transition-colors"
+          >
+            ← На главную
+          </Link>
+        </motion.div>
 
-                <Badge variant={badge.variant} className="self-start mb-3">
-                  {t(badge.label)}
-                </Badge>
-
-                <h3 className="text-xl font-bold text-text-primary mb-2">
-                  {getLocalizedField(course, 'title', locale)}
-                </h3>
-
-                <p className="text-text-secondary text-sm mb-4 flex-grow">
-                  {getLocalizedField(course, 'shortDescription', locale)}
-                </p>
-
-                <div className="flex items-center gap-4 text-xs text-text-muted mb-4">
-                  <span>{course.totalLessons} {t('lessons')}</span>
-                  <span>{course.totalDurationHours} {t('hours')}</span>
-                </div>
-
-                <div className="flex items-center justify-between pt-4 border-t border-dark-border">
-                  <div>
-                    <span className="text-xl font-bold text-accent-green">{formatPrice(course.price)}</span>
-                    {course.originalPrice && (
-                      <span className="text-sm text-text-muted line-through ml-2">{formatPrice(course.originalPrice)}</span>
-                    )}
-                  </div>
-                  <Link href={`/courses/${course.slug}`}>
-                    <Button size="sm">{t('enrollButton')}</Button>
-                  </Link>
-                </div>
-              </Card>
-            );
-          })}
-        </div>
       </div>
     </div>
   );

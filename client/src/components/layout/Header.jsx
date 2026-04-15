@@ -55,6 +55,7 @@ export default function Header() {
             <nav className="hidden md:flex items-center gap-1">
               <NavLink href="/">{t('home')}</NavLink>
               <NavLink href="/courses">{t('courses')}</NavLink>
+              <NavLink href="/blog">Блог</NavLink>
 
               {/* Locale toggle */}
               <motion.button
