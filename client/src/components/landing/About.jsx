@@ -64,53 +64,19 @@ function GrainDef() {
   );
 }
 
-const photos = [
-  {
-    src: '/about/cert.jpg',
-    alt: 'Сертификат Topstep Funded Trader',
-    rotate: -11,
-    tx: -52,
-    ty: 18,
-    scale: 0.84,
-    brightness: 0.45,
-    zIndex: 0,
-  },
-  {
-    src: '/about/payouts.jpg',
-    alt: 'Выплаты с проп-счёта',
-    rotate: -4,
-    tx: -22,
-    ty: 7,
-    scale: 0.91,
-    brightness: 0.62,
-    zIndex: 1,
-  },
-  {
-    src: '/about/chart.jpg',
-    alt: 'Реальная сделка на графике',
-    rotate: 4,
-    tx: 18,
-    ty: 5,
-    scale: 0.95,
-    brightness: 0.78,
-    zIndex: 2,
-  },
-  {
-    src: '/about/desk.jpg',
-    alt: 'За рабочим местом',
-    rotate: 1,
-    tx: 0,
-    ty: 0,
-    scale: 1.0,
-    brightness: 1.0,
-    zIndex: 3,
-  },
+// photos alt texts are injected from translations — see About component
+const photoBase = [
+  { src: '/about/cert.jpg',   rotate: -11, tx: -52, ty: 18, scale: 0.84, brightness: 0.45, zIndex: 0, tKey: 'photoAlt3' },
+  { src: '/about/payouts.jpg',rotate: -4,  tx: -22, ty: 7,  scale: 0.91, brightness: 0.62, zIndex: 1, tKey: 'photoAlt1' },
+  { src: '/about/chart.jpg',  rotate: 4,   tx: 18,  ty: 5,  scale: 0.95, brightness: 0.78, zIndex: 2, tKey: 'photoAlt2' },
+  { src: '/about/desk.jpg',   rotate: 1,   tx: 0,   ty: 0,  scale: 1.0,  brightness: 1.0,  zIndex: 3, tKey: 'photoAlt4' },
 ];
 
-function StackingGallery() {
+function StackingGallery({ t }) {
   const [hovered, setHovered] = useState(false);
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: '-60px' });
+  const photos = photoBase.map(p => ({ ...p, alt: t(p.tKey) }));
 
   return (
     <div ref={ref} className="relative w-full flex items-center justify-center" style={{ height: 380 }}>
@@ -257,17 +223,17 @@ function BentoPhoto({ src, alt, label, delay, inView, className = '', style = {}
   );
 }
 
-function BentoGrid({ inView }) {
+function BentoGrid({ inView, t }) {
   return (
     <>
       {/* Mobile: simple stack */}
       <div className="mt-10 flex flex-col gap-3 sm:hidden">
         {[
-          { src: '/about/payouts.jpg', alt: 'Выплаты с проп-счёта',            label: 'Реальные выплаты',      delay: 0.05, h: 180 },
-          { src: '/about/chart.jpg',   alt: 'Реальная сделка на графике',       label: 'Живая торговля',        delay: 0.12, h: 160 },
-          { src: '/about/cert.jpg',    alt: 'Сертификат Topstep Funded Trader', label: 'Topstep Funded Trader', delay: 0.18, h: 200 },
+          { src: '/about/payouts.jpg', altKey: 'photoAlt1', labelKey: 'photoLabel1', delay: 0.05, h: 180 },
+          { src: '/about/chart.jpg',   altKey: 'photoAlt2', labelKey: 'photoLabel2', delay: 0.12, h: 160 },
+          { src: '/about/cert.jpg',    altKey: 'photoAlt3', labelKey: 'photoLabel3', delay: 0.18, h: 200 },
         ].map(p => (
-          <BentoPhoto key={p.src} src={p.src} alt={p.alt} label={p.label} delay={p.delay} inView={inView}
+          <BentoPhoto key={p.src} src={p.src} alt={t(p.altKey)} label={t(p.labelKey)} delay={p.delay} inView={inView}
             style={{ height: p.h }} />
         ))}
       </div>
@@ -278,11 +244,11 @@ function BentoGrid({ inView }) {
         gridTemplateRows: '220px 190px',
         gap: 10,
       }}>
-        <BentoPhoto src="/about/cert.jpg" alt="Сертификат Topstep Funded Trader" label="Topstep Funded Trader"
+        <BentoPhoto src="/about/cert.jpg" alt={t('photoAlt3')} label={t('photoLabel3')}
           delay={0.05} inView={inView} style={{ gridColumn: '1', gridRow: '1 / 3' }} />
-        <BentoPhoto src="/about/payouts.jpg" alt="Выплаты с проп-счёта" label="Реальные выплаты"
+        <BentoPhoto src="/about/payouts.jpg" alt={t('photoAlt1')} label={t('photoLabel1')}
           delay={0.12} inView={inView} style={{ gridColumn: '2', gridRow: '1' }} />
-        <BentoPhoto src="/about/chart.jpg" alt="Реальная сделка на графике" label="Живая торговля"
+        <BentoPhoto src="/about/chart.jpg" alt={t('photoAlt2')} label={t('photoLabel2')}
           delay={0.18} inView={inView} style={{ gridColumn: '2', gridRow: '2' }} />
       </div>
     </>
@@ -308,7 +274,7 @@ export default function About() {
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
 
-          {/* ── Left: Personal photo — edge-blended into background ── */}
+          {/* ── Left: Stacking photo gallery ── */}
           <motion.div
             initial={{ opacity: 0, x: -40 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -320,7 +286,7 @@ export default function About() {
               {/* Photo */}
               <img
                 src="/about/desk.jpg"
-                alt="Dastan за работой"
+                alt={t('photoAlt4')}
                 draggable={false}
                 style={{
                   width: '100%',
@@ -359,7 +325,7 @@ export default function About() {
             transition={{ duration: 0.7, ease: 'easeOut', delay: 0.1 }}
           >
             <div className="inline-flex items-center px-3 py-1 rounded-full border border-accent-green/20 bg-accent-green/[0.06] text-accent-green text-[11px] font-mono tracking-widest uppercase mb-4">
-              Преподаватель
+              {t('badge')}
             </div>
             <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
               {t('title')}
@@ -373,7 +339,7 @@ export default function About() {
         </div>
 
         {/* ── Bottom: Bento photo grid ── */}
-        <BentoGrid inView={contentInView} />
+        <BentoGrid inView={contentInView} t={t} />
 
       </div>
     </section>

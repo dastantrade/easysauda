@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef } from 'react';
+import { useLocale } from 'next-intl';
 import { motion, AnimatePresence, useInView, useScroll, useTransform, useSpring } from 'framer-motion';
 
 /* ── Icons ── */
@@ -16,57 +17,137 @@ const IconProp     = () => (<svg width="20" height="20" viewBox="0 0 20 20" fill
 const IconPsych    = () => (<svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 3c3.866 0 7 2.686 7 6 0 2.5-1.5 4.7-3.75 5.65V17H6.75v-2.35C4.5 13.7 3 11.5 3 9c0-3.314 3.134-6 7-6z" stroke="currentColor" strokeWidth="1.3"/><path d="M7.5 17h5" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/></svg>);
 const IconLive     = () => (<svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="3" fill="currentColor" opacity="0.6"/><circle cx="10" cy="10" r="6" stroke="currentColor" strokeWidth="1.2" opacity="0.4"/><circle cx="10" cy="10" r="8.5" stroke="currentColor" strokeWidth="1" opacity="0.2"/><path d="M10 1.5v2M10 16.5v2M1.5 10h2M16.5 10h2" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" opacity="0.5"/></svg>);
 
-/* ── 5 thematic blocks ── */
-const groups = [
-  {
-    id: 1,
-    label: 'Блок 1',
-    title: 'Фундамент и инструменты',
-    modules: [
-      { num: 1,  Icon: IconMarket,   title: 'Основа рынка',              result: 'Понимаешь логику движения цены',      points: ['Как устроен рынок и за счёт чего движется цена', 'Участники: толпа и крупный капитал', 'Тренд, коррекция, боковик', 'Почему большинство теряет деньги'] },
-      { num: 2,  Icon: IconTerminal, title: 'Работа в терминале',        result: 'Умеешь работать в торговой платформе', points: ['Интерфейс торговой платформы', 'Выставление ордеров: лимит, маркет, стоп', 'Работа с графиками и таймфреймами', 'Базовые настройки под свой инструмент'] },
+/* ── Locale-specific content ── */
+const programContent = {
+  ru: {
+    badge: '11 модулей · 5 блоков',
+    heading: 'Программа курса',
+    pointA: 'Точка А: не понимаю рынок',
+    pointB: 'Точка Б: торгую по системе',
+    ctaCardLabel: 'Итог курса',
+    ctaMain: 'Ты не просто изучаешь трейдинг —',
+    ctaSub1: 'ты получаешь',
+    ctaHighlight1: 'конкретную модель',
+    ctaAnd: 'и',
+    ctaHighlight2: 'чёткий алгоритм действий',
+    ctaEnd: 'на рынке.',
+    ctaButton: 'Записаться на курс',
+    resultPrefix: 'Результат: ',
+    groups: [
+      {
+        id: 1,
+        label: 'Блок 1',
+        title: 'Фундамент и инструменты',
+        modules: [
+          { num: 1, Icon: IconMarket,   title: 'Основа рынка',           result: 'Понимаешь логику движения цены',       points: ['Как устроен рынок и за счёт чего движется цена', 'Участники: толпа и крупный капитал', 'Тренд, коррекция, боковик', 'Почему большинство теряет деньги'] },
+          { num: 2, Icon: IconTerminal, title: 'Работа в терминале',     result: 'Умеешь работать в торговой платформе', points: ['Интерфейс торговой платформы', 'Выставление ордеров: лимит, маркет, стоп', 'Работа с графиками и таймфреймами', 'Базовые настройки под свой инструмент'] },
+        ],
+      },
+      {
+        id: 2,
+        label: 'Блок 2',
+        title: 'Технический арсенал',
+        modules: [
+          { num: 3, Icon: IconLevels,   title: 'Уровни и структура',     result: 'Находишь ключевые зоны на графике',    points: ['Поддержка и сопротивление', 'Как строить сильные уровни', 'Ложные пробои и их фильтрация', 'Накопление и распределение'] },
+          { num: 4, Icon: IconCandle,   title: 'Свечной анализ',         result: 'Читаешь рынок через свечи',            points: ['Чтение свечей: баланс покупателя и продавца', 'Пин-бар, поглощение, inside bar', 'Фильтрация ложных сигналов', 'Подтверждение от уровня'] },
+          { num: 5, Icon: IconTrend,    title: 'Тренды и фазы рынка',    result: 'Понимаешь направление и фазу рынка',   points: ['Определение тренда и его структура', 'Линии тренда и каналы', 'Слом структуры и переход в боковик', 'Фазы рынка: накопление, движение, распределение'] },
+        ],
+      },
+      {
+        id: 3,
+        label: 'Блок 3',
+        title: 'Торговые стратегии',
+        modules: [
+          { num: 6, Icon: IconStrategy, title: 'Пошаговый алгоритм торговли', result: 'Есть система — знаешь когда входить', points: ['Готовая система входа: алгоритм действий', 'Сценарии: отбой, пробой, ретест', 'Комбинация: уровень + тренд + свеча', 'Когда входить, а когда пропускать'] },
+          { num: 7, Icon: IconScalp,    title: 'Скальпинг и интрадей',        result: 'Забираешь движение внутри дня',       points: ['Что такое скальпинг и как на нём зарабатывают', 'Работа на младших таймфреймах (1m–5m)', 'Быстрые входы и частичная фиксация', 'Интрадей-структура фьючерсного рынка'] },
+        ],
+      },
+      {
+        id: 4,
+        label: 'Блок 4',
+        title: 'Математика трейдинга',
+        modules: [
+          { num: 8, Icon: IconRisk,     title: 'Риск-менеджмент',            result: 'Сохраняешь депозит и контролируешь риск', points: ['Постановка стопов по структуре', 'Работа с контрактами', 'RR (риск/прибыль): расчёт позиций', 'Дневной лимит убытков и правила проп'] },
+          { num: 9, Icon: IconProp,     title: 'Как пройти проп-трейдинг',   result: 'Получаешь проп-счёт от $50 000',          points: ['Что такое проп-трейдинг и как он работает', 'Правила проп-компаний: цели, ограничения', 'Стратегия прохождения оценки', 'Как торговать чужим капиталом без риска своих денег'] },
+        ],
+      },
+      {
+        id: 5,
+        label: 'Блок 5',
+        title: 'Психология и практика',
+        modules: [
+          { num: 10, Icon: IconPsych,   title: 'Психология трейдинга',       result: 'Торгуешь по системе, не по эмоциям',         points: ['Почему трейдеры теряют на знаниях', 'Страх, жадность, месть рынку', 'Дисциплина как главный актив', 'Ведение торгового журнала'] },
+          { num: 11, Icon: IconLive,    title: 'Live-сессии',                result: 'Торгуешь вместе с ментором в реальном времени', points: ['Разбор рынка в реальном времени', 'Совместный анализ перед сессией', 'Индивидуальный разбор твоих сделок', 'Переход к самостоятельной торговле'] },
+        ],
+      },
     ],
   },
-  {
-    id: 2,
-    label: 'Блок 2',
-    title: 'Технический арсенал',
-    modules: [
-      { num: 3,  Icon: IconLevels,   title: 'Уровни и структура',        result: 'Находишь ключевые зоны на графике',   points: ['Поддержка и сопротивление', 'Как строить сильные уровни', 'Ложные пробои и их фильтрация', 'Накопление и распределение'] },
-      { num: 4,  Icon: IconCandle,   title: 'Свечной анализ',            result: 'Читаешь рынок через свечи',           points: ['Чтение свечей: баланс покупателя и продавца', 'Пин-бар, поглощение, inside bar', 'Фильтрация ложных сигналов', 'Подтверждение от уровня'] },
-      { num: 5,  Icon: IconTrend,    title: 'Тренды и фазы рынка',       result: 'Понимаешь направление и фазу рынка',  points: ['Определение тренда и его структура', 'Линии тренда и каналы', 'Слом структуры и переход в боковик', 'Фазы рынка: накопление, движение, распределение'] },
+  kz: {
+    badge: '11 модуль · 5 блок',
+    heading: 'Курс бағдарламасы',
+    pointA: 'А нүктесі: нарықты түсінбеймін',
+    pointB: 'Ə нүктесі: жүйе бойынша саудалаймын',
+    ctaCardLabel: 'Курс нәтижесі',
+    ctaMain: 'Сен жай ғана трейдингті зерттемейсің —',
+    ctaSub1: 'сен аласың',
+    ctaHighlight1: 'нақты модель',
+    ctaAnd: 'және',
+    ctaHighlight2: 'нарықтағы нақты іс-қимыл алгоритмін',
+    ctaEnd: '',
+    ctaButton: 'Курсқа жазылу',
+    resultPrefix: 'Нәтиже: ',
+    groups: [
+      {
+        id: 1,
+        label: 'Блок 1',
+        title: 'Негіз және құралдар',
+        modules: [
+          { num: 1, Icon: IconMarket,   title: 'Нарықтың негізі',        result: 'Баға қозғалысының логикасын түсінесің',     points: ['Нарық қалай құрылған және баға неге қозғалады', 'Қатысушылар: топ және ірі капитал', 'Тренд, коррекция, боковик', 'Неге көпшілік ақша жоғалтады'] },
+          { num: 2, Icon: IconTerminal, title: 'Терминалда жұмыс',       result: 'Сауда платформасында жұмыс істей аласың', points: ['Сауда платформасының интерфейсі', 'Ордерлерді орналастыру: лимит, маркет, стоп', 'Графиктер және таймфреймдермен жұмыс', 'Өз құралыңа арналған базалық баптаулар'] },
+        ],
+      },
+      {
+        id: 2,
+        label: 'Блок 2',
+        title: 'Техникалық арсенал',
+        modules: [
+          { num: 3, Icon: IconLevels,   title: 'Деңгейлер және құрылым', result: 'Графиктегі негізгі аймақтарды табасың',    points: ['Қолдау және кедергі', 'Күшті деңгейлерді қалай салу керек', 'Жалған бұзылулар және оларды сүзу', 'Жинақтау және бөлу'] },
+          { num: 4, Icon: IconCandle,   title: 'Шамшырақ талдауы',       result: 'Нарықты шамшырақ арқылы оқисың',          points: ['Шамшырақтарды оқу: сатып алушы мен сатушының балансы', 'Пин-бар, жұту, inside bar', 'Жалған сигналдарды сүзу', 'Деңгейден растау'] },
+          { num: 5, Icon: IconTrend,    title: 'Трендтер және нарық фазалары', result: 'Бағытты және нарық фазасын түсінесің', points: ['Тренд анықтамасы және оның құрылымы', 'Тренд сызықтары мен арналары', 'Құрылымның бұзылуы және боковикке өтуі', 'Нарық фазалары: жинақтау, қозғалыс, бөлу'] },
+        ],
+      },
+      {
+        id: 3,
+        label: 'Блок 3',
+        title: 'Сауда стратегиялары',
+        modules: [
+          { num: 6, Icon: IconStrategy, title: 'Сауда алгоритмі',        result: 'Жүйеңіз бар — қашан кіру керектігін білесіз', points: ['Дайын кіру жүйесі: іс-қимыл алгоритмі', 'Сценарийлер: кері серпін, бұзылу, ретест', 'Комбинация: деңгей + тренд + шамшырақ', 'Қашан кіру, қашан өткізіп жіберу'] },
+          { num: 7, Icon: IconScalp,    title: 'Скальпинг және интрадей', result: 'Күн ішіндегі қозғалысты аласың',           points: ['Скальпинг дегеніміз не және ол қалай табыс әкеледі', 'Кіші таймфреймдерде жұмыс (1m–5m)', 'Жылдам кірулер және ішінара фиксация', 'Фьючерс нарығының интрадей-құрылымы'] },
+        ],
+      },
+      {
+        id: 4,
+        label: 'Блок 4',
+        title: 'Трейдинг математикасы',
+        modules: [
+          { num: 8, Icon: IconRisk,     title: 'Тәуекел-менеджмент',     result: 'Депозитті сақтайсың және тәуекелді бақылайсың', points: ['Структура бойынша стоптарды орнату', 'Контракттармен жұмыс', 'RR (тәуекел/пайда): позицияларды есептеу', 'Күнделікті шығын лимиті және проп ережелері'] },
+          { num: 9, Icon: IconProp,     title: 'Проп-трейдингтен қалай өту', result: 'Проп-шотты $50 000-дан аласың',         points: ['Проп-трейдинг дегеніміз не және ол қалай жұмыс істейді', 'Проп-компанияның ережелері: мақсаттар, шектеулер', 'Бағалауды өту стратегиясы', 'Өз ақшаңызды тәуекелге салмай бөтеннің капиталымен қалай сауда жасауға болады'] },
+        ],
+      },
+      {
+        id: 5,
+        label: 'Блок 5',
+        title: 'Психология және тәжірибе',
+        modules: [
+          { num: 10, Icon: IconPsych,   title: 'Трейдинг психологиясы',  result: 'Эмоция бойынша емес, жүйе бойынша саудалайсың',      points: ['Неге трейдерлер білімде жоғалтады', 'Қорқыныш, ашкөздік, нарықтан өш алу', 'Тәртіп басты актив ретінде', 'Сауда журналын жүргізу'] },
+          { num: 11, Icon: IconLive,    title: 'Live-сессиялар',         result: 'Нақты уақытта ментормен бірге саудалайсың', points: ['Нарықты нақты уақытта талдау', 'Сессия алдындағы бірлескен талдау', 'Сіздің мәмілелеріңізді жеке талдау', 'Өзіндік саудаға көшу'] },
+        ],
+      },
     ],
   },
-  {
-    id: 3,
-    label: 'Блок 3',
-    title: 'Торговые стратегии',
-    modules: [
-      { num: 6,  Icon: IconStrategy, title: 'Пошаговый алгоритм торговли', result: 'Есть система — знаешь когда входить', points: ['Готовая система входа: алгоритм действий', 'Сценарии: отбой, пробой, ретест', 'Комбинация: уровень + тренд + свеча', 'Когда входить, а когда пропускать'] },
-      { num: 7,  Icon: IconScalp,    title: 'Скальпинг и интрадей',       result: 'Забираешь движение внутри дня',       points: ['Что такое скальпинг и как на нём зарабатывают', 'Работа на младших таймфреймах (1m–5m)', 'Быстрые входы и частичная фиксация', 'Интрадей-структура фьючерсного рынка'] },
-    ],
-  },
-  {
-    id: 4,
-    label: 'Блок 4',
-    title: 'Математика трейдинга',
-    modules: [
-      { num: 8,  Icon: IconRisk,     title: 'Риск-менеджмент',           result: 'Сохраняешь депозит и контролируешь риск', points: ['Постановка стопов по структуре', 'Работа с контрактами', 'RR (риск/прибыль): расчёт позиций', 'Дневной лимит убытков и правила проп'] },
-      { num: 9,  Icon: IconProp,     title: 'Как пройти проп-трейдинг',  result: 'Получаешь проп-счёт от $50 000',       points: ['Что такое проп-трейдинг и как он работает', 'Правила проп-компаний: цели, ограничения', 'Стратегия прохождения оценки', 'Как торговать чужим капиталом без риска своих денег'] },
-    ],
-  },
-  {
-    id: 5,
-    label: 'Блок 5',
-    title: 'Психология и практика',
-    modules: [
-      { num: 10, Icon: IconPsych,    title: 'Психология трейдинга',      result: 'Торгуешь по системе, не по эмоциям',  points: ['Почему трейдеры теряют на знаниях', 'Страх, жадность, месть рынку', 'Дисциплина как главный актив', 'Ведение торгового журнала'] },
-      { num: 11, Icon: IconLive,     title: 'Live-сессии',               result: 'Торгуешь вместе с ментором в реальном времени', points: ['Разбор рынка в реальном времени', 'Совместный анализ перед сессией', 'Индивидуальный разбор твоих сделок', 'Переход к самостоятельной торговле'] },
-    ],
-  },
-];
+};
 
-function ModuleCard({ mod, index, inView }) {
+function ModuleCard({ mod, index, inView, resultPrefix }) {
   const [open, setOpen] = useState(false);
   const Icon = mod.Icon;
 
@@ -90,7 +171,7 @@ function ModuleCard({ mod, index, inView }) {
           borderLeftColor: 'rgba(0,212,170,0.5)',
         }}
       >
-        {/* Number — dominant */}
+        {/* Number */}
         <span
           className="font-mono font-black flex-shrink-0 w-10 text-right leading-none"
           style={{
@@ -157,7 +238,7 @@ function ModuleCard({ mod, index, inView }) {
                 <svg width="11" height="11" viewBox="0 0 12 12" fill="none" className="text-accent-green">
                   <path d="M2 6l3 3 5-5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
-                <span className="text-[11px] font-semibold text-accent-green">Результат: {mod.result}</span>
+                <span className="text-[11px] font-semibold text-accent-green">{resultPrefix}{mod.result}</span>
               </div>
             </div>
           </motion.div>
@@ -168,8 +249,11 @@ function ModuleCard({ mod, index, inView }) {
 }
 
 export default function CourseProgram() {
+  const locale = useLocale();
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: '-60px' });
+
+  const pc = programContent[locale] ?? programContent.ru;
 
   /* scroll-linked timeline fill */
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'end start'] });
@@ -196,14 +280,27 @@ export default function CourseProgram() {
           className="mb-8"
         >
           <div className="inline-flex items-center px-3 py-1 rounded-full border border-accent-green/20 bg-accent-green/[0.06] text-accent-green text-[11px] font-mono tracking-widest uppercase mb-4">
-            11 модулей · 5 блоков
+            {pc.badge}
           </div>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6">Программа курса</h2>
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6">{pc.heading}</h2>
 
-          {/* Dynamic scroll-linked timeline */}
-          <div className="flex items-center gap-3">
+          {/* Mobile: compact A→B badges */}
+          <div className="flex items-center gap-2 sm:hidden flex-wrap">
+            <span className="text-[11px] text-white/35 bg-white/[0.04] border border-white/[0.07] rounded-md px-2.5 py-1">
+              {pc.pointA}
+            </span>
+            <svg width="14" height="10" viewBox="0 0 14 10" fill="none" className="flex-shrink-0">
+              <path d="M0 5h11M8 2l3 3-3 3" stroke="rgba(0,212,170,0.6)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+            <span className="text-[11px] text-accent-green bg-accent-green/[0.08] border border-accent-green/25 rounded-md px-2.5 py-1 font-semibold">
+              {pc.pointB}
+            </span>
+          </div>
+
+          {/* Desktop: scroll-linked animated timeline */}
+          <div className="hidden sm:flex items-center gap-3">
             <div className="text-xs text-white/35 bg-white/[0.04] border border-white/[0.07] rounded-md px-2.5 py-1 whitespace-nowrap">
-              Точка А: не понимаю рынок
+              {pc.pointA}
             </div>
             <div className="flex-1 relative h-[2px] bg-white/[0.06] rounded-full overflow-hidden">
               <motion.div
@@ -216,7 +313,7 @@ export default function CourseProgram() {
               />
             </div>
             <div className="text-xs text-accent-green bg-accent-green/[0.08] border border-accent-green/25 rounded-md px-2.5 py-1 font-semibold whitespace-nowrap">
-              Точка Б: торгую по системе
+              {pc.pointB}
             </div>
           </div>
         </motion.div>
@@ -239,20 +336,20 @@ export default function CourseProgram() {
             <div className="p-5 lg:p-7 flex flex-col gap-4 lg:gap-6">
               {/* Label */}
               <span className="text-[10px] font-bold tracking-[0.2em] uppercase text-accent-green/70">
-                Итог курса
+                {pc.ctaCardLabel}
               </span>
 
               {/* Main text */}
               <div>
                 <p className="text-2xl lg:text-3xl font-bold text-white leading-snug mb-4">
-                  Ты не просто изучаешь трейдинг —
+                  {pc.ctaMain}
                 </p>
                 <p className="text-base lg:text-lg text-white/60 leading-relaxed">
-                  ты получаешь{' '}
-                  <span className="text-accent-green font-semibold">конкретную модель</span>{' '}
-                  и{' '}
-                  <span className="text-accent-green font-semibold">чёткий алгоритм действий</span>{' '}
-                  на рынке.
+                  {pc.ctaSub1}{' '}
+                  <span className="text-accent-green font-semibold">{pc.ctaHighlight1}</span>{' '}
+                  {pc.ctaAnd}{' '}
+                  <span className="text-accent-green font-semibold">{pc.ctaHighlight2}</span>
+                  {pc.ctaEnd ? ` ${pc.ctaEnd}` : ''}
                 </p>
               </div>
 
@@ -263,7 +360,7 @@ export default function CourseProgram() {
                 whileHover={{ scale: 1.03, boxShadow: '0 0 24px rgba(0,212,170,0.45)' }}
                 whileTap={{ scale: 0.97 }}
               >
-                Записаться на курс
+                {pc.ctaButton}
                 <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
                   <path d="M3 7h8M8 4l3 3-3 3" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
@@ -274,7 +371,7 @@ export default function CourseProgram() {
           {/* RIGHT — module accordion grouped by block */}
           <div className="flex-1 min-w-0">
             <div className="flex flex-col gap-6">
-              {groups.map((group, gi) => (
+              {pc.groups.map((group, gi) => (
                 <div key={group.id}>
                   {/* Group header */}
                   <motion.div
@@ -295,7 +392,7 @@ export default function CourseProgram() {
                   {/* Modules in this group */}
                   <div className="flex flex-col gap-1.5">
                     {group.modules.map((mod, i) => (
-                      <ModuleCard key={mod.num} mod={mod} index={gi * 3 + i} inView={inView} />
+                      <ModuleCard key={mod.num} mod={mod} index={gi * 3 + i} inView={inView} resultPrefix={pc.resultPrefix} />
                     ))}
                   </div>
                 </div>

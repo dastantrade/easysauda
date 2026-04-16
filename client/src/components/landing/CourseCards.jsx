@@ -1,23 +1,20 @@
 'use client';
 
 import { useRef, useCallback } from 'react';
+import { useLocale } from 'next-intl';
 import { motion, useInView } from 'framer-motion';
 
-/* ── Check icon ── */
+/* ── Icons ── */
 const IconCheck = () => (
   <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
     <path d="M2.5 7l3 3 6-6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
   </svg>
 );
-
-/* ── Arrow icon ── */
 const IconArrow = () => (
   <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
     <path d="M3 7h8M8 4l3 3-3 3" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
   </svg>
 );
-
-/* ── Users icon ── */
 const IconGroup = () => (
   <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
     <circle cx="8" cy="7" r="3" stroke="currentColor" strokeWidth="1.4"/>
@@ -26,8 +23,6 @@ const IconGroup = () => (
     <path d="M15 14c2 0 4 1 4 4" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" opacity="0.6"/>
   </svg>
 );
-
-/* ── Single person icon ── */
 const IconSolo = () => (
   <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
     <circle cx="11" cy="7" r="3.5" stroke="currentColor" strokeWidth="1.4"/>
@@ -36,44 +31,101 @@ const IconSolo = () => (
   </svg>
 );
 
-const plans = [
-  {
-    id: 'group',
-    badge: 'Групповой',
-    title: 'Менторшип',
-    format: 'Мини-группа · 3–5 участников',
-    Icon: IconGroup,
-    for: 'Тем, кому важна поддержка единомышленников и структурное обучение',
-    features: [
-      'Полный доступ к платформе с уроками',
-      'Общие созвоны 2 раза в неделю (разбор сделок)',
-      'Закрытый чат группы для обмена опытом',
-      'Проверка домашних заданий лично мной',
+/* ── Locale content ── */
+const content = {
+  ru: {
+    sectionBadge: 'Форматы участия',
+    sectionTitle: 'Тарифы обучения',
+    sectionSubtitle: 'Выберите формат участия и начните путь к профессиональному трейдингу.',
+    popular: 'Популярный',
+    questionText: 'Есть вопросы? Напишите в',
+    answerText: '— отвечаю лично.',
+    plans: [
+      {
+        id: 'group',
+        badge: 'Групповой',
+        title: 'Менторшип',
+        format: 'Мини-группа · 3–5 участников',
+        Icon: IconGroup,
+        for: 'Тем, кому важна поддержка единомышленников и структурное обучение',
+        features: [
+          'Полный доступ к платформе с уроками',
+          'Общие созвоны 2 раза в неделю (разбор сделок)',
+          'Закрытый чат группы для обмена опытом',
+          'Проверка домашних заданий лично мной',
+        ],
+        price: '500 000',
+        currency: '₸',
+        highlight: false,
+        ctaLabel: 'Записаться в группу',
+      },
+      {
+        id: 'personal',
+        badge: 'Индивидуально',
+        title: 'Personal 1-on-1',
+        format: 'Личное наставничество',
+        Icon: IconSolo,
+        for: 'Тем, кто ценит время и хочет максимально быстрый результат под контролем',
+        features: [
+          'Персональный график обучения',
+          'Личные созвоны — разбираем только твои графики и психологию',
+          'Моя поддержка 24/7',
+          'Ускоренный результат без лишних шагов',
+        ],
+        price: '1 000 000',
+        currency: '₸',
+        highlight: true,
+        ctaLabel: 'Начать лично со мной',
+      },
     ],
-    price: '500 000',
-    currency: '₸',
-    highlight: false,
-    ctaLabel: 'Записаться в группу',
   },
-  {
-    id: 'personal',
-    badge: 'Индивидуально',
-    title: 'Personal 1-on-1',
-    format: 'Личное наставничество',
-    Icon: IconSolo,
-    for: 'Тем, кто ценит время и хочет максимально быстрый результат под контролем',
-    features: [
-      'Персональный график обучения',
-      'Личные созвоны — разбираем только твои графики и психологию',
-      'Моя поддержка 24/7',
-      'Ускоренный результат без лишних шагов',
+  kz: {
+    sectionBadge: 'Қатысу форматтары',
+    sectionTitle: 'Оқу бағдарламалары',
+    sectionSubtitle: 'Қатысу форматын таңдап, кәсіби трейдингке апаратын жолды бастаңыз.',
+    popular: 'Танымал',
+    questionText: 'Сұрақтарыңыз бар ма? Жазыңыз',
+    answerText: '— жеке жауап беремін.',
+    plans: [
+      {
+        id: 'group',
+        badge: 'Топтық',
+        title: 'Менторшип',
+        format: 'Мини-топ · 3–5 қатысушы',
+        Icon: IconGroup,
+        for: 'Пікірлес адамдардың қолдауы мен құрылымды оқу маңызды болғандар үшін',
+        features: [
+          'Сабақтары бар платформаға толық қол жеткізу',
+          'Аптасына 2 рет жалпы қоңыраулар (мәмілелер талдауы)',
+          'Тәжірибе алмасуға арналған жабық топ чаты',
+          'Үй тапсырмаларын мен жеке тексеремін',
+        ],
+        price: '500 000',
+        currency: '₸',
+        highlight: false,
+        ctaLabel: 'Топқа жазылу',
+      },
+      {
+        id: 'personal',
+        badge: 'Жеке',
+        title: 'Personal 1-on-1',
+        format: 'Жеке тәлімгерлік',
+        Icon: IconSolo,
+        for: 'Уақытты бағалайтын және бақылауда жылдам нәтиже алғысы келетіндер үшін',
+        features: [
+          'Жеке оқу кестесі',
+          'Жеке қоңыраулар — тек сенің графиктеріңді және психологияңды талдаймыз',
+          'Менің қолдауым 24/7',
+          'Артық қадамсыз жеделдетілген нәтиже',
+        ],
+        price: '1 000 000',
+        currency: '₸',
+        highlight: true,
+        ctaLabel: 'Мен арқылы бастау',
+      },
     ],
-    price: '1 000 000',
-    currency: '₸',
-    highlight: true,
-    ctaLabel: 'Начать лично со мной',
   },
-];
+};
 
 // 3D Perspective Tilt wrapper
 function TiltCard({ children, className = '' }) {
@@ -112,8 +164,12 @@ function TiltCard({ children, className = '' }) {
 }
 
 export default function CourseCards() {
+  const locale = useLocale();
   const headerRef = useRef(null);
   const headerInView = useInView(headerRef, { once: true });
+
+  const { sectionBadge, sectionTitle, sectionSubtitle, popular, questionText, answerText, plans } =
+    content[locale] ?? content.ru;
 
   return (
     <section className="relative py-20 overflow-hidden" id="courses">
@@ -137,13 +193,13 @@ export default function CourseCards() {
           transition={{ duration: 0.6 }}
         >
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-[#00B8FF]/20 bg-[#00B8FF]/[0.06] text-[#00B8FF] text-[11px] font-mono tracking-widest uppercase mb-4">
-            Форматы участия
+            {sectionBadge}
           </div>
           <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
-            Тарифы обучения
+            {sectionTitle}
           </h2>
           <p className="text-white/45 max-w-xl mx-auto">
-            Выберите формат участия и начните путь к профессиональному трейдингу.
+            {sectionSubtitle}
           </p>
         </motion.div>
 
@@ -174,7 +230,7 @@ export default function CourseCards() {
                   {plan.highlight && (
                     <div className="absolute top-4 right-4">
                       <span className="text-[10px] font-bold tracking-[0.18em] uppercase text-accent-green bg-accent-green/10 border border-accent-green/25 rounded-full px-2.5 py-0.5">
-                        Популярный
+                        {popular}
                       </span>
                     </div>
                   )}
@@ -313,12 +369,12 @@ export default function CourseCards() {
           viewport={{ once: true }}
           transition={{ delay: 0.5, duration: 0.5 }}
         >
-          Есть вопросы? Напишите в{' '}
+          {questionText}{' '}
           <a href="https://t.me/dastan_talgatkhanuly" target="_blank" rel="noopener noreferrer"
             className="text-accent-green/60 hover:text-accent-green transition-colors underline underline-offset-2">
             Telegram
           </a>{' '}
-          — отвечаю лично.
+          {answerText}
         </motion.p>
 
       </div>

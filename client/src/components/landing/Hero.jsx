@@ -179,7 +179,7 @@ export default function Hero() {
             transition={{ duration: 0.5, delay: 0.4 }}
           >
             <span className="w-1.5 h-1.5 rounded-full bg-accent-green animate-pulse" />
-            EASYSAUDA: Твой алгоритм в хаосе рынка
+            {t('badge')}
           </motion.div>
 
           {/* Subtitle */}
@@ -199,11 +199,11 @@ export default function Hero() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.6 }}
           >
-            <a href="#courses">
-              <Button size="lg" className="animate-pulse-green">{t('cta')}</Button>
+            <a href="#courses" className="w-full sm:w-auto">
+              <Button size="lg" className="animate-pulse-green w-full sm:w-auto">{t('cta')}</Button>
             </a>
-            <a href="#program">
-              <Button variant="glass" size="lg">Программа курса</Button>
+            <a href="#program" className="w-full sm:w-auto">
+              <Button variant="glass" size="lg" className="w-full sm:w-auto">{t('programBtn')}</Button>
             </a>
           </motion.div>
 

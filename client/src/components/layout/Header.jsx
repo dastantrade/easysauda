@@ -55,7 +55,7 @@ export default function Header() {
             <nav className="hidden md:flex items-center gap-1">
               <NavLink href="/">{t('home')}</NavLink>
               <NavLink href="/courses">{t('courses')}</NavLink>
-              <NavLink href="/blog">Блог</NavLink>
+              <NavLink href="/blog">{t('blog')}</NavLink>
 
               {/* Locale toggle */}
               <motion.button
@@ -146,6 +146,9 @@ export default function Header() {
                 </MobileNavLink>
                 <MobileNavLink href="/courses" onClick={() => setMobileMenuOpen(false)}>
                   {t('courses')}
+                </MobileNavLink>
+                <MobileNavLink href="/blog" onClick={() => setMobileMenuOpen(false)}>
+                  {t('blog')}
                 </MobileNavLink>
 
                 <div className="border-t border-white/[0.07] my-2" />

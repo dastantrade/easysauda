@@ -84,7 +84,7 @@ export default async function LocaleLayout({ children, params }) {
 
   return (
     <html lang={locale === 'kz' ? 'kk' : locale} className={geistSans.variable}>
-      <body className={geistSans.className}>
+      <body className={`${geistSans.className} overflow-x-hidden`}>
         <NextIntlClientProvider messages={messages}>
           {/* Cursor glow — follows mouse on desktop */}
           <CursorGlow />
