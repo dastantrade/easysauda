@@ -1,10 +1,251 @@
 'use client';
 
 import { useParams } from 'next/navigation';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from '@/i18n/routing';
 
+function FvgChart() {
+  const [cur, setCur] = useState(0);
+
+  const steps = [
+    {
+      caption: 'Это обычное спокойное движение цены. Покупатели и продавцы в балансе — свечи небольшие, хаотичные.',
+      show: [],
+    },
+    {
+      caption: 'Свеча A — последняя «нормальная» свеча перед импульсом. Запомни её High (верхнюю тень) — это нижняя граница будущей зоны.',
+      show: ['cA'],
+    },
+    {
+      caption: 'Свеча B — мощный импульс вверх! Цена улетела так быстро, что никто не успел нормально наторговать. Свеча C — первая после импульса. Её Low = верхняя граница зоны.',
+      show: ['cA', 'cB', 'cC'],
+    },
+    {
+      caption: 'Голубая зона между High(A) и Low(C) — это и есть имбаланс (FVG). Там не было реальных сделок. Цена продолжает расти...',
+      show: ['cA', 'cB', 'cC', 'fvg', 'after'],
+    },
+    {
+      caption: 'Цена разворачивается и возвращается в зону FVG — это митигация. Коснулась зоны и отскочила вверх. Многие трейдеры входят именно здесь.',
+      show: ['cA', 'cB', 'cC', 'fvg', 'after', 'mit'],
+    },
+  ];
+
+  const ids = ['cA', 'cB', 'cC', 'fvg', 'after', 'mit'];
+  const go = (dir) => setCur(prev => Math.max(0, Math.min(steps.length - 1, prev + dir)));
+  const s = steps[cur];
+
+  return (
+    <div className="my-8 rounded-2xl p-6 sm:p-8" style={{ background: '#151820', border: '0.5px solid rgba(255,255,255,0.12)' }}>
+      {/* Caption */}
+      <div className="rounded-lg px-4 py-3 mb-5 text-sm leading-relaxed min-h-[56px]"
+        style={{ background: 'rgba(255,255,255,0.04)', border: '0.5px solid rgba(255,255,255,0.08)', color: '#b0b8c8' }}>
+        {s.caption}
+      </div>
+
+      {/* Chart */}
+      <svg viewBox="0 0 640 280" className="w-full rounded-lg">
+        {/* Grid */}
+        {[30, 80, 130, 180, 230].map(y => (
+          <line key={y} x1="50" y1={y} x2="610" y2={y} stroke="rgba(255,255,255,0.06)" strokeWidth="0.5"/>
+        ))}
+        <line x1="50" y1="30" x2="50" y2="250" stroke="rgba(255,255,255,0.1)" strokeWidth="0.5"/>
+        {/* Price labels */}
+        {[['105',34],['100',84],['95',134],['90',184],['85',234]].map(([label, y]) => (
+          <text key={y} fontSize="10" fill="rgba(255,255,255,0.25)" textAnchor="end" x="46" y={y} fontFamily="monospace">{label}</text>
+        ))}
+        {/* Base candles */}
+        <line x1="80" y1="172" x2="80" y2="222" stroke="#ef4444" strokeWidth="1"/>
+        <rect x="72" y="182" width="16" height="28" rx="2" fill="#ef4444"/>
+        <line x1="110" y1="168" x2="110" y2="215" stroke="#22c87a" strokeWidth="1"/>
+        <rect x="102" y="176" width="16" height="26" rx="2" fill="#22c87a"/>
+        <line x1="140" y1="165" x2="140" y2="225" stroke="#ef4444" strokeWidth="1"/>
+        <rect x="132" y="178" width="16" height="30" rx="2" fill="#ef4444"/>
+        <line x1="170" y1="170" x2="170" y2="208" stroke="#22c87a" strokeWidth="1"/>
+        <rect x="162" y="178" width="16" height="20" rx="2" fill="#22c87a"/>
+        {/* Candle A */}
+        <g style={{ opacity: s.show.includes('cA') ? 1 : 0, transition: 'opacity 0.45s' }}>
+          <line x1="220" y1="165" x2="220" y2="220" stroke="#ef4444" strokeWidth="1"/>
+          <rect x="212" y="175" width="16" height="32" rx="2" fill="#ef4444"/>
+          <text fontSize="11" fill="rgba(255,255,255,0.4)" textAnchor="middle" x="220" y="158" fontFamily="monospace">A</text>
+        </g>
+        {/* Candle B (impulse) */}
+        <g style={{ opacity: s.show.includes('cB') ? 1 : 0, transition: 'opacity 0.45s' }}>
+          <line x1="265" y1="58" x2="265" y2="220" stroke="#22c87a" strokeWidth="1.5"/>
+          <rect x="257" y="68" width="16" height="140" rx="2" fill="#22c87a"/>
+          <text fontSize="11" fill="rgba(255,255,255,0.4)" textAnchor="middle" x="265" y="51" fontFamily="monospace">B</text>
+          <text fontSize="10" fill="rgba(34,200,122,0.6)" textAnchor="middle" x="265" y="145" fontFamily="sans-serif">импульс</text>
+        </g>
+        {/* Candle C */}
+        <g style={{ opacity: s.show.includes('cC') ? 1 : 0, transition: 'opacity 0.45s' }}>
+          <line x1="310" y1="45" x2="310" y2="112" stroke="#22c87a" strokeWidth="1"/>
+          <rect x="302" y="52" width="16" height="48" rx="2" fill="#22c87a"/>
+          <text fontSize="11" fill="rgba(255,255,255,0.4)" textAnchor="middle" x="310" y="38" fontFamily="monospace">C</text>
+        </g>
+        {/* FVG zone */}
+        <g style={{ opacity: s.show.includes('fvg') ? 1 : 0, transition: 'opacity 0.5s' }}>
+          <rect x="212" y="100" width="398" height="75" fill="rgba(59,130,246,0.09)"/>
+          <line x1="212" y1="100" x2="610" y2="100" stroke="rgba(59,130,246,0.5)" strokeWidth="1" strokeDasharray="5 4"/>
+          <line x1="212" y1="175" x2="610" y2="175" stroke="rgba(59,130,246,0.5)" strokeWidth="1" strokeDasharray="5 4"/>
+          <rect x="215" y="107" width="80" height="18" rx="3" fill="rgba(13,15,20,0.85)"/>
+          <text fontSize="11" fontWeight="500" fill="#60a5fa" x="219" y="120" fontFamily="sans-serif">FVG — зона</text>
+          <text fontSize="10" fill="rgba(255,255,255,0.2)" textAnchor="end" x="206" y="104" fontFamily="monospace">~98</text>
+          <text fontSize="10" fill="rgba(255,255,255,0.2)" textAnchor="end" x="206" y="179" fontFamily="monospace">~91</text>
+        </g>
+        {/* After candles */}
+        <g style={{ opacity: s.show.includes('after') ? 1 : 0, transition: 'opacity 0.45s' }}>
+          <line x1="348" y1="38" x2="348" y2="85" stroke="#22c87a" strokeWidth="1"/>
+          <rect x="340" y="45" width="16" height="32" rx="2" fill="#22c87a"/>
+          <line x1="378" y1="32" x2="378" y2="75" stroke="#ef4444" strokeWidth="1"/>
+          <rect x="370" y="38" width="16" height="28" rx="2" fill="#ef4444"/>
+          <line x1="408" y1="34" x2="408" y2="72" stroke="#22c87a" strokeWidth="1"/>
+          <rect x="400" y="40" width="16" height="26" rx="2" fill="#22c87a"/>
+        </g>
+        {/* Mitigation */}
+        <g style={{ opacity: s.show.includes('mit') ? 1 : 0, transition: 'opacity 0.5s' }}>
+          <line x1="438" y1="34" x2="438" y2="132" stroke="#ef4444" strokeWidth="1.5"/>
+          <rect x="430" y="42" width="16" height="82" rx="2" fill="#ef4444"/>
+          <line x1="468" y1="88" x2="468" y2="178" stroke="#ef4444" strokeWidth="1"/>
+          <rect x="460" y="102" width="16" height="62" rx="2" fill="#ef4444"/>
+          <line x1="498" y1="98" x2="498" y2="188" stroke="#ef4444" strokeWidth="1"/>
+          <rect x="490" y="112" width="16" height="62" rx="2" fill="#ef4444"/>
+          <line x1="528" y1="82" x2="528" y2="168" stroke="#22c87a" strokeWidth="1.5"/>
+          <rect x="520" y="90" width="16" height="70" rx="2" fill="#22c87a"/>
+          <line x1="558" y1="65" x2="558" y2="125" stroke="#22c87a" strokeWidth="1"/>
+          <rect x="550" y="72" width="16" height="46" rx="2" fill="#22c87a"/>
+          <rect x="468" y="186" width="72" height="18" rx="3" fill="rgba(13,15,20,0.9)"/>
+          <text fontSize="11" fontWeight="500" fill="#60a5fa" x="472" y="199" fontFamily="sans-serif">митигация</text>
+          <rect x="534" y="62" width="56" height="18" rx="3" fill="rgba(13,15,20,0.9)"/>
+          <text fontSize="11" fontWeight="500" fill="#22c87a" x="538" y="75" fontFamily="sans-serif">отскок</text>
+        </g>
+      </svg>
+
+      {/* Controls */}
+      <div className="flex items-center justify-between mt-4 flex-wrap gap-3">
+        <div className="flex items-center gap-3">
+          <div className="flex gap-1.5">
+            {steps.map((_, i) => (
+              <span key={i} onClick={() => setCur(i)} className="cursor-pointer transition-all duration-300 rounded-full"
+                style={{ width: 7, height: 7, display: 'inline-block', background: i === cur ? '#3b82f6' : 'rgba(255,255,255,0.15)', transform: i === cur ? 'scale(1.3)' : 'scale(1)' }} />
+            ))}
+          </div>
+          <span className="text-[11px] font-mono text-white/30">шаг {cur + 1} / {steps.length}</span>
+        </div>
+        <div className="flex gap-2">
+          <button onClick={() => go(-1)} disabled={cur === 0}
+            className="text-xs px-4 py-1.5 rounded-lg border transition-colors disabled:opacity-30"
+            style={{ border: '0.5px solid rgba(255,255,255,0.15)', background: 'transparent', color: '#e8eaf0', cursor: cur === 0 ? 'default' : 'pointer' }}>
+            ← назад
+          </button>
+          <button onClick={() => go(1)} disabled={cur === steps.length - 1}
+            className="text-xs px-4 py-1.5 rounded-lg border transition-colors disabled:opacity-30"
+            style={{ border: '0.5px solid rgba(255,255,255,0.15)', background: 'transparent', color: '#e8eaf0', cursor: cur === steps.length - 1 ? 'default' : 'pointer' }}>
+            вперёд →
+          </button>
+        </div>
+      </div>
+
+      {/* Legend */}
+      <div className="flex gap-4 flex-wrap mt-4 pt-4 text-xs text-white/35" style={{ borderTop: '0.5px solid rgba(255,255,255,0.08)' }}>
+        <span className="flex items-center gap-1.5"><span style={{ width: 10, height: 10, borderRadius: 2, background: '#22c87a', display: 'inline-block' }}/> Бычья свеча</span>
+        <span className="flex items-center gap-1.5"><span style={{ width: 10, height: 10, borderRadius: 2, background: '#ef4444', display: 'inline-block' }}/> Медвежья свеча</span>
+        <span className="flex items-center gap-1.5"><span style={{ width: 10, height: 10, borderRadius: 2, background: 'rgba(59,130,246,0.35)', border: '1px dashed rgba(59,130,246,0.6)', display: 'inline-block' }}/> Зона FVG</span>
+        <span className="ml-auto text-white/18 text-[11px]">A, C — соседние свечи · B — импульс</span>
+      </div>
+    </div>
+  );
+}
+
 const articles = {
+  'imbalan-fvg-smart-money': {
+    tag: 'Smart Money',
+    tagColor: 'text-blue-400',
+    border: 'rgba(59,130,246,0.2)',
+    title: 'Имбаланс (FVG): как умные деньги оставляют след на графике',
+    date: '22 апр 2026',
+    readTime: '4 мин',
+    content: [
+      {
+        type: 'lead',
+        text: 'Fair Value Gap (FVG) — один из ключевых концептов Smart Money. Это зона на графике, где цена двигалась так быстро, что между свечами образовался «пробел». Рынок почти всегда возвращается, чтобы закрыть его.',
+      },
+      {
+        type: 'h2',
+        text: 'Что такое имбаланс?',
+      },
+      {
+        type: 'p',
+        text: 'Имбаланс (он же FVG — Fair Value Gap, или «зона справедливой стоимости») — это область между тремя свечами, где High предыдущей свечи не перекрывается с Low следующей после импульса. Другими словами: цена прыгнула так резко, что там не было реальных двусторонних сделок.',
+      },
+      {
+        type: 'p',
+        text: 'Это не просто «пустое место» на графике. Это след институциональных игроков — крупных банков, фондов и маркетмейкеров, которые провернули большой объём за короткое время.',
+      },
+      {
+        type: 'fvg-chart',
+      },
+      {
+        type: 'h2',
+        text: 'Как найти FVG: три свечи',
+      },
+      {
+        type: 'list',
+        items: [
+          'Свеча A — последняя свеча перед импульсом. Запоминаем её High.',
+          'Свеча B — мощный импульсный бар (бычий или медвежий). Тело большое, закрытие далеко от открытия.',
+          'Свеча C — первая свеча после импульса. Запоминаем её Low.',
+          'Зона FVG = от High(A) до Low(C). Если там есть пространство — это имбаланс.',
+        ],
+      },
+      {
+        type: 'callout',
+        text: 'Правило: чем больше тело свечи B и чем крупнее таймфрейм — тем сильнее зона FVG. На M15 это шум. На H4 или D1 — серьёзный уровень.',
+      },
+      {
+        type: 'h2',
+        text: 'Почему цена возвращается в FVG?',
+      },
+      {
+        type: 'p',
+        text: 'Рынок — это механизм поиска баланса. Когда крупный игрок открывает огромную позицию, он создаёт дисбаланс. Позже рынок «закрывает» эту зону, чтобы предоставить возможность тем, кто не успел наторговать в момент импульса.',
+      },
+      {
+        type: 'p',
+        text: 'Процесс возврата в зону называется митигацией. После митигации зона либо «перезаряжается» (и цена продолжает движение в сторону импульса), либо пробивается — это сигнал смены тренда.',
+      },
+      {
+        type: 'h2',
+        text: 'Как торговать от FVG',
+      },
+      {
+        type: 'list',
+        items: [
+          'Определи направление тренда на старшем таймфрейме (H4/D1).',
+          'Найди FVG, образованный в направлении тренда.',
+          'Жди возврата цены в зону — это твой вход.',
+          'Стоп-лосс — за нижнюю/верхнюю границу зоны FVG.',
+          'Тейк-профит — к ближайшему структурному уровню или в соотношении 1:2+.',
+        ],
+      },
+      {
+        type: 'callout',
+        text: 'Важно: не каждый FVG отрабатывает. Лучшие зоны — те, что сформированы на смене структуры (BOS/CHoCH) в направлении старшего тренда. Именно там Smart Money набирают позиции.',
+      },
+      {
+        type: 'h2',
+        text: 'Бычий и медвежий FVG',
+      },
+      {
+        type: 'p',
+        text: 'Бычий FVG (Bullish FVG) — образован на импульсе вверх. Зона находится ниже текущей цены. Ищем лонг при возврате в зону.',
+      },
+      {
+        type: 'p',
+        text: 'Медвежий FVG (Bearish FVG) — образован на импульсе вниз. Зона выше текущей цены. Ищем шорт при возврате в зону.',
+      },
+    ],
+  },
+
   'matematika-trejdinga-rr': {
     tag: 'Математика трейдинга',
     tagColor: 'text-accent-green',
@@ -166,6 +407,8 @@ function renderContent(block, i) {
           ))}
         </ul>
       );
+    case 'fvg-chart':
+      return <FvgChart key={i} />;
     case 'table':
       return (
         <div key={i} className="my-6 overflow-x-auto rounded-xl" style={{ border: '1px solid rgba(255,255,255,0.07)' }}>

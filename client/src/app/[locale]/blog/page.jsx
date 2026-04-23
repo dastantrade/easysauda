@@ -5,6 +5,17 @@ import { Link } from '@/i18n/routing';
 
 export const posts = [
   {
+    slug: 'imbalan-fvg-smart-money',
+    tag: 'Smart Money',
+    title: 'Имбаланс (FVG): как умные деньги оставляют след на графике',
+    excerpt: 'Что такое Fair Value Gap, как его найти и почему цена почти всегда возвращается в эту зону. Пошаговый интерактивный разбор с графиком.',
+    readTime: '4 мин',
+    date: '22 апр 2026',
+    color: 'rgba(59,130,246,0.08)',
+    border: 'rgba(59,130,246,0.20)',
+    tagColor: 'text-blue-400',
+  },
+  {
     slug: 'matematika-trejdinga-rr',
     tag: 'Математика трейдинга',
     title: 'RR 1:2 и 1:3: почему соотношение риск/прибыль решает всё',
