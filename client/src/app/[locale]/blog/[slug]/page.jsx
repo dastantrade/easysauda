@@ -5,6 +5,97 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from '@/i18n/routing';
 
+function SpringChart() {
+  const [cur, setCur] = useState(0);
+  const steps = [
+    { caption: 'Цена застряла в диапазоне — ходит между поддержкой и сопротивлением. Ни быки, ни медведи не могут взять верх. Рынок в балансе.', show: [] },
+    { caption: 'Быки атакуют — цена лезет к сопротивлению. Все в ожидании: сейчас пробьёт и полетим вверх! Люди покупают на прорыве...', show: ['approachUp'] },
+    { caption: 'Прорыв! Но закрытие — обратно внутри диапазона. Это Upthrust — ловушка. Те, кто купил на «пробое», теперь в убытке и закрывают позиции вниз.', show: ['approachUp', 'upthrust', 'upthrustLabel'] },
+    { caption: 'Цена разворачивается и падает к поддержке. Продавцы давят. Теперь все ждут пробоя вниз и ставят стопы под поддержку...', show: ['approachUp', 'upthrust', 'upthrustLabel', 'approachDown'] },
+    { caption: 'Пробой поддержки! Стопы сорвало — и сразу разворот. Это Spring. Цена вернулась выше поддержки. Вход в лонг, стоп под минимумом свечи, цель — верхняя граница диапазона.', show: ['approachUp', 'upthrust', 'upthrustLabel', 'approachDown', 'spring', 'springLabel'] },
+  ];
+  const go = (dir) => setCur(p => Math.max(0, Math.min(steps.length - 1, p + dir)));
+  const s = steps[cur];
+  const vis = (id) => ({ opacity: s.show.includes(id) ? 1 : 0, transition: 'opacity 0.45s' });
+
+  return (
+    <div className="my-8 rounded-2xl p-5 sm:p-7" style={{ background: '#151820', border: '0.5px solid rgba(255,255,255,0.12)' }}>
+      <div className="rounded-lg px-4 py-3 mb-5 text-sm leading-relaxed min-h-[60px]"
+        style={{ background: 'rgba(255,255,255,0.04)', border: '0.5px solid rgba(255,255,255,0.08)', color: '#b0b8c8' }}>
+        {s.caption}
+      </div>
+      <svg viewBox="0 0 640 290" className="w-full rounded-lg">
+        {[50,100,150,200,250].map(y => <line key={y} x1="55" y1={y} x2="610" y2={y} stroke="rgba(255,255,255,0.04)" strokeWidth="0.5"/>)}
+        <line x1="55" y1="50" x2="55" y2="265" stroke="rgba(255,255,255,0.08)" strokeWidth="0.5"/>
+        {[['104',54],['100',104],['96',154],['92',204],['88',254]].map(([l,y]) =>
+          <text key={y} fontSize="10" fill="rgba(255,255,255,0.2)" textAnchor="end" x="51" y={y} fontFamily="monospace">{l}</text>)}
+        {/* Resistance line */}
+        <line x1="58" y1="80" x2="610" y2="80" stroke="rgba(239,68,68,0.45)" strokeWidth="1" strokeDasharray="6 4"/>
+        <text fontSize="10" fill="rgba(239,68,68,0.55)" x="60" y="74" fontFamily="sans-serif">Сопротивление ~102</text>
+        {/* Support line */}
+        <line x1="58" y1="222" x2="610" y2="222" stroke="rgba(34,200,122,0.45)" strokeWidth="1" strokeDasharray="6 4"/>
+        <text fontSize="10" fill="rgba(34,200,122,0.55)" x="60" y="238" fontFamily="sans-serif">Поддержка ~88</text>
+        {/* Base candles */}
+        <line x1="82" y1="132" x2="82" y2="206" stroke="#22c87a" strokeWidth="1"/><rect x="74" y="148" width="16" height="38" rx="2" fill="#22c87a"/>
+        <line x1="114" y1="128" x2="114" y2="208" stroke="#ef4444" strokeWidth="1"/><rect x="106" y="145" width="16" height="40" rx="2" fill="#ef4444"/>
+        <line x1="146" y1="134" x2="146" y2="202" stroke="#22c87a" strokeWidth="1"/><rect x="138" y="150" width="16" height="35" rx="2" fill="#22c87a"/>
+        <line x1="178" y1="130" x2="178" y2="204" stroke="#ef4444" strokeWidth="1"/><rect x="170" y="147" width="16" height="38" rx="2" fill="#ef4444"/>
+        {/* Approach up */}
+        <g style={vis('approachUp')}>
+          <line x1="214" y1="118" x2="214" y2="196" stroke="#22c87a" strokeWidth="1"/><rect x="206" y="132" width="16" height="44" rx="2" fill="#22c87a"/>
+          <line x1="248" y1="100" x2="248" y2="175" stroke="#22c87a" strokeWidth="1"/><rect x="240" y="114" width="16" height="42" rx="2" fill="#22c87a"/>
+          <line x1="282" y1="88" x2="282" y2="160" stroke="#22c87a" strokeWidth="1"/><rect x="274" y="100" width="16" height="38" rx="2" fill="#22c87a"/>
+        </g>
+        {/* Upthrust */}
+        <g style={vis('upthrust')}>
+          <line x1="320" y1="50" x2="320" y2="158" stroke="#ef4444" strokeWidth="1.5"/>
+          <rect x="312" y="100" width="16" height="40" rx="2" fill="#ef4444"/>
+          <circle cx="320" cy="80" r="3.5" fill="none" stroke="rgba(239,68,68,0.9)" strokeWidth="1.5"/>
+        </g>
+        <g style={vis('upthrustLabel')}>
+          <rect x="332" y="48" width="120" height="22" rx="4" fill="rgba(13,15,20,0.92)"/>
+          <text fontSize="11" fontWeight="600" fill="#ef4444" x="338" y="63" fontFamily="sans-serif">Upthrust — ложный ↑</text>
+        </g>
+        {/* Approach down */}
+        <g style={vis('approachDown')}>
+          <line x1="358" y1="112" x2="358" y2="204" stroke="#ef4444" strokeWidth="1"/><rect x="350" y="128" width="16" height="54" rx="2" fill="#ef4444"/>
+          <line x1="392" y1="145" x2="392" y2="218" stroke="#ef4444" strokeWidth="1"/><rect x="384" y="160" width="16" height="46" rx="2" fill="#ef4444"/>
+          <line x1="426" y1="160" x2="426" y2="224" stroke="#ef4444" strokeWidth="1"/><rect x="418" y="172" width="16" height="40" rx="2" fill="#ef4444"/>
+        </g>
+        {/* Spring */}
+        <g style={vis('spring')}>
+          <line x1="464" y1="178" x2="464" y2="255" stroke="#22c87a" strokeWidth="1.5"/>
+          <rect x="456" y="184" width="16" height="30" rx="2" fill="#22c87a"/>
+          <circle cx="464" cy="222" r="3.5" fill="none" stroke="rgba(34,200,122,0.9)" strokeWidth="1.5"/>
+          <line x1="498" y1="155" x2="498" y2="208" stroke="#22c87a" strokeWidth="1"/><rect x="490" y="162" width="16" height="36" rx="2" fill="#22c87a"/>
+          <line x1="532" y1="128" x2="532" y2="182" stroke="#22c87a" strokeWidth="1"/><rect x="524" y="134" width="16" height="38" rx="2" fill="#22c87a"/>
+        </g>
+        <g style={vis('springLabel')}>
+          <rect x="472" y="253" width="108" height="22" rx="4" fill="rgba(13,15,20,0.92)"/>
+          <text fontSize="11" fontWeight="600" fill="#22c87a" x="478" y="268" fontFamily="sans-serif">Spring — ложный ↓</text>
+          <text fontSize="10" fill="rgba(34,200,122,0.6)" x="536" y="124" fontFamily="sans-serif">лонг ↑</text>
+        </g>
+      </svg>
+      <div className="flex items-center justify-between mt-4 flex-wrap gap-3">
+        <div className="flex items-center gap-3">
+          <div className="flex gap-1.5">
+            {steps.map((_,i) => <span key={i} onClick={() => setCur(i)} className="cursor-pointer rounded-full" style={{ width:7, height:7, display:'inline-block', background: i===cur ? '#22c87a' : 'rgba(255,255,255,0.15)', transform: i===cur ? 'scale(1.3)' : 'scale(1)', transition:'all 0.3s' }}/>)}
+          </div>
+          <span className="text-[11px] font-mono text-white/30">шаг {cur+1} / {steps.length}</span>
+        </div>
+        <div className="flex gap-2">
+          <button onClick={() => go(-1)} disabled={cur===0} style={{ border:'0.5px solid rgba(255,255,255,0.15)', background:'transparent', color:'#e8eaf0', cursor: cur===0?'default':'pointer', opacity: cur===0?0.3:1, fontSize:13, padding:'6px 16px', borderRadius:8 }}>← назад</button>
+          <button onClick={() => go(1)} disabled={cur===steps.length-1} style={{ border:'0.5px solid rgba(255,255,255,0.15)', background:'transparent', color:'#e8eaf0', cursor: cur===steps.length-1?'default':'pointer', opacity: cur===steps.length-1?0.3:1, fontSize:13, padding:'6px 16px', borderRadius:8 }}>вперёд →</button>
+        </div>
+      </div>
+      <div className="flex gap-4 flex-wrap mt-4 pt-4 text-xs text-white/35" style={{ borderTop:'0.5px solid rgba(255,255,255,0.08)' }}>
+        <span className="flex items-center gap-1.5"><span style={{ width:10, height:10, borderRadius:2, background:'#22c87a', display:'inline-block' }}/> Spring — ложный пробой вниз</span>
+        <span className="flex items-center gap-1.5"><span style={{ width:10, height:10, borderRadius:2, background:'#ef4444', display:'inline-block' }}/> Upthrust — ложный пробой вверх</span>
+      </div>
+    </div>
+  );
+}
+
 function FvgChart() {
   const [cur, setCur] = useState(0);
 
@@ -157,6 +248,92 @@ function FvgChart() {
 }
 
 const articles = {
+  'spring-upthrust-vajkoff': {
+    tag: 'Вайкофф',
+    tagColor: 'text-orange-400',
+    border: 'rgba(251,146,60,0.2)',
+    title: 'Spring и Upthrust: рынок специально охотится за твоим стопом',
+    date: '28 апр 2026',
+    readTime: '5 мин',
+    content: [
+      {
+        type: 'lead',
+        text: 'Ты ставишь стоп под поддержку — его выносит. Ставишь стоп над сопротивлением при шорте — снова выносит. Это не случайность. Это Spring и Upthrust — два паттерна, которые крупные игроки используют чтобы набрать позицию за твой счёт.',
+      },
+      {
+        type: 'h2',
+        text: 'Почему рынок 70% времени стоит на месте',
+      },
+      {
+        type: 'p',
+        text: 'Большую часть времени рынок не трендит — он болтается в диапазоне между поддержкой и сопротивлением. Японцы называют это состояние «ва» — равновесие. Ни быки, ни медведи не контролируют ситуацию.',
+      },
+      {
+        type: 'p',
+        text: 'Именно в такие периоды и происходит самое интересное: крупные игроки (банки, фонды, маркетмейкеры) тихо набирают позиции. И для этого им нужна ликвидность — то есть твои стопы.',
+      },
+      {
+        type: 'h2',
+        text: 'Spring и Upthrust — что это такое',
+      },
+      {
+        type: 'spring-chart',
+      },
+      {
+        type: 'p',
+        text: 'Upthrust (верхнее спружинивание) — цена пробивает сопротивление вверх, собирает стопы тех, кто стоял в шорте, и возвращается обратно в диапазон. Все, кто купил на «пробое», остаются с убытком.',
+      },
+      {
+        type: 'p',
+        text: 'Spring (нижнее спружинивание) — зеркальная история. Цена проваливается под поддержку, выносит стопы лонгистов, и сразу разворачивается вверх. Это сигнал входить в лонг — именно там крупный игрок набрал позицию.',
+      },
+      {
+        type: 'callout',
+        text: 'Почему это работает: под каждым уровнем поддержки стоят стоп-лоссы лонгистов и лимитные ордера шортистов. Когда цена туда заходит — объём есть. Именно этот объём нужен крупному игроку чтобы войти в рынок незаметно.',
+      },
+      {
+        type: 'h2',
+        text: 'Как торговать Spring',
+      },
+      {
+        type: 'list',
+        items: [
+          'Находишь горизонтальный диапазон: чёткие поддержка и сопротивление.',
+          'Ждёшь когда цена пробивает поддержку вниз — и на следующей свече закрывается ВЫШЕ поддержки.',
+          'Это и есть Spring. Входишь в лонг на закрытии этой свечи или на откате к зоне пробоя.',
+          'Стоп — под минимумом свечи Spring (там уже не должно быть цены).',
+          'Цель — верхняя граница диапазона (сопротивление). Обычно RR получается 1:3 и выше.',
+        ],
+      },
+      {
+        type: 'h2',
+        text: 'Как торговать Upthrust',
+      },
+      {
+        type: 'list',
+        items: [
+          'Цена пробивает сопротивление вверх — и закрывается обратно внутри диапазона.',
+          'Входишь в шорт на следующей свече или на откате к уровню сопротивления.',
+          'Стоп — над максимумом свечи Upthrust.',
+          'Цель — нижняя граница диапазона (поддержка).',
+          'Идеально если на свече Upthrust появляется медвежий свечной паттерн: повешенный, падающая звезда, медвежье поглощение.',
+        ],
+      },
+      {
+        type: 'callout',
+        text: 'Главный признак настоящего Spring/Upthrust: объём. На свече ложного пробоя объём должен быть повышенным — это говорит о том, что там произошла реальная передача позиций от слабых рук к сильным.',
+      },
+      {
+        type: 'h2',
+        text: 'Чего не делать',
+      },
+      {
+        type: 'p',
+        text: 'Не входи заранее в ожидании Spring — жди подтверждения закрытием свечи выше поддержки. Не ставь тейк на середине диапазона — дай цене дойти до противоположной границы. И не торгуй этот паттерн на мелких таймфреймах без подтверждения со старших.',
+      },
+    ],
+  },
+
   'imbalan-fvg-smart-money': {
     tag: 'Smart Money',
     tagColor: 'text-blue-400',
@@ -407,6 +584,8 @@ function renderContent(block, i) {
           ))}
         </ul>
       );
+    case 'spring-chart':
+      return <SpringChart key={i} />;
     case 'fvg-chart':
       return <FvgChart key={i} />;
     case 'table':

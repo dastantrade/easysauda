@@ -5,6 +5,17 @@ import { Link } from '@/i18n/routing';
 
 export const posts = [
   {
+    slug: 'spring-upthrust-vajkoff',
+    tag: 'Вайкофф',
+    title: 'Spring и Upthrust: рынок специально охотится за твоим стопом',
+    excerpt: 'Почему цена всегда выносит стопы перед разворотом и как на этом зарабатывать. Разбираем два паттерна Вайкоффа с интерактивным графиком.',
+    readTime: '5 мин',
+    date: '28 апр 2026',
+    color: 'rgba(251,146,60,0.07)',
+    border: 'rgba(251,146,60,0.20)',
+    tagColor: 'text-orange-400',
+  },
+  {
     slug: 'imbalan-fvg-smart-money',
     tag: 'Smart Money',
     title: 'Имбаланс (FVG): как умные деньги оставляют след на графике',
